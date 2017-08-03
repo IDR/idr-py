@@ -1,8 +1,8 @@
-.. image:: https://travis-ci.org/ome/omero-fpbioimage.svg?branch=master
-    :target: https://travis-ci.org/ome/omero-fpbioimage
+.. image:: https://travis-ci.org/IDR/idr-py.svg?branch=master
+    :target: https://travis-ci.org/IDR/idr-py
 
-.. image:: https://badge.fury.io/py/omero-fpbioimage.svg
-    :target: https://badge.fury.io/py/omero-fpbioimage
+.. image:: https://badge.fury.io/py/idr-py.svg
+    :target: https://badge.fury.io/py/idr-py
 
 IDR-PY
 ======
