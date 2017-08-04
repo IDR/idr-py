@@ -12,3 +12,4 @@ before_install:
 
 script:
  - python setup.py sdist install || exit 1
+ 
