@@ -1,11 +1,11 @@
 """
 Helper functions for accessing the IDR from within IPython notebooks.
 """
-from idr import createHTTPsession
 import pandas
-from pandas import DataFrame
-from pandas import read_csv
-from pandas import concat
+from idr import create_http_session
+from omero.rtypes import rlist, rstring, unwrap
+from omero.sys import ParametersI
+
 
 def attributes_by_attributes(conn,
                              name="Gene Symbol",
@@ -13,16 +13,13 @@ def attributes_by_attributes(conn,
                              ns="openmicroscopy.org/mapr/gene",
                              ns2="openmicroscopy.org/mapr/phenotype",
                              name2=None,
-                             sId=None
+                             s_id=None
                              ):
 
     """
     Return a list of neighbours attributes
     for given case insensitive attribute value. (Uses the python blitz gateway)
     """
-    from omero.rtypes import rstring, rlist, unwrap
-    from omero.sys import ParametersI
-
     params = ParametersI()
     params.addString("value", value.lower())
     q = (
@@ -35,7 +32,7 @@ def attributes_by_attributes(conn,
     if name:
         params.addString("name", name)
         where_claus.append("and mv.name = :name")
-    q = q.format(**{'where_claus':" ".join(where_claus)})
+    q = q.format(**{'where_claus': " ".join(where_claus)})
 
     values = [v[0]['value'] for v in unwrap(
         conn.getQueryService().projection(q, params))]
@@ -48,10 +45,10 @@ def attributes_by_attributes(conn,
 
     q = (
         "select distinct new map("
-            "mv.name as name, "
-            "mv.value as value, "
-            "mv2.name as name2, "
-            "mv2.value as value2) "
+        "mv.name as name, "
+        "mv.value as value, "
+        "mv2.name as name2, "
+        "mv2.value as value2) "
         "from Image as i "
         "join i.annotationLinks as ial "
         "join i.annotationLinks as ial2 "
@@ -62,7 +59,7 @@ def attributes_by_attributes(conn,
         "where a.ns = :ns and a2.ns = :ns2 "
         "and mv.value in (:values) {where_claus} "
     )
-    
+
     where_claus = []
     if name:
         params.addString("name", name)
@@ -71,17 +68,18 @@ def attributes_by_attributes(conn,
         params.addString("name2", name2)
         where_claus.append("and mv2.name = :name2")
 
-    q = q.format(**{'where_claus':" ".join(where_claus)})
-    
-    if sId != None:
-        q = q + ("and i in (select image from WellSample "
-            "where well.plate in "
-            "(select child from ScreenPlateLink where parent.id = {sId}))")
+    q = q.format(**{'where_claus': " ".join(where_claus)})
 
-        screenidList = []
-        screenidList.append(str(sId))
-        q = q.format(**{'sId':" ".join(screenidList)})
-    
+    if s_id is not None:
+        q = q + ("and i in (select image from WellSample "
+                 "where well.plate in "
+                 "(select child from ScreenPlateLink where "
+                 "parent.id = {sId}))")
+
+        screen_id_list = []
+        screen_id_list.append(str(s_id))
+        q = q.format(**{'sId': " ".join(screen_id_list)})
+
     res = {}
     for r in unwrap(conn.getQueryService().projection(q, params)):
         r = r[0]
@@ -91,6 +89,7 @@ def attributes_by_attributes(conn,
             res[(r['name'], r['value'])] = [(r['name2'], r['value2'])]
     return res
 
+
 def annotation_ids_by_field(conn,
                             value="CMPO_0000077",
                             key="Phenotype Term Accession",
@@ -99,87 +98,88 @@ def annotation_ids_by_field(conn,
     Return a list of IDs for map annotations with the given namespace
     that have a key=value pair matching the given parameters.
     """
-    from omero.rtypes import unwrap
-    from omero.sys import ParametersI
+
     params = ParametersI()
     params.addString("value", value)
     params.addString("key", key)
     params.addString("ns", ns)
-    q = (
-        "select a.id from MapAnnotation a join a.mapValue as mv "
-        "where a.ns = :ns and mv.name = :key and mv.value = :value"
-    )
+    q = ("select a.id from MapAnnotation a join a.mapValue as mv "
+         "where a.ns = :ns and mv.name = :key and mv.value = :value")
+
     return unwrap(conn.getQueryService().projection(q, params))[0]
 
+
 def get_phenotypes_for_gene(gene_name, screenid=None):
-    
+
     # initial data
-    IDR_BASE_URL = "http://idr.openmicroscopy.org"
-    INDEX_PAGE = "%s/webclient/?experimenter=-1" % IDR_BASE_URL
-    SCREENS_PROJECTS_URL = "{base}/mapr/api/{key}/?value={value}"
-    PLATES_URL = "{base}/mapr/api/{key}/plates/?value={value}&id={screen_id}"
-    IMAGES_URL = "{base}/mapr/api/{key}/images/?value={value}&node={parent_type}&id={parent_id}"
-    ATTRIBUTES_URL = "{base}/webclient/api/annotations/?type=map&image={image_id}"
-    MAP_URL = "{base}/webclient/api/annotations/?type=map&{type}={image_id}"
-    
+    idr_base_url = "http://idr.openmicroscopy.org"
+    v = "{base}/mapr/api/{key}/"
+    screens_projects_url = v + "?value={value}"
+    plates_url = v + "plates/?value={value}&id={screen_id}"
+    images_url = v + "images/?value={value}&node={parent_type}&id={parent_id}"
+    map_url = "{base}/webclient/api/annotations/?type=map&{type}={image_id}"
+
     """
-    Return a list of phenotype 
+    Return a list of phenotype
     for given case insensitive gene_name. (Uses the json api)
     """
-    session = createHTTPsession()
-    screenidList = []
+    session = create_http_session()
+    screen_id_list = []
     if screenid is not None:
-        screenidList.append(screenid)
+        screen_id_list.append(screenid)
     else:
-        qs = {'base': IDR_BASE_URL, 'key': 'gene', 'value': gene_name}
-        url = SCREENS_PROJECTS_URL.format(**qs)
+        qs = {'base': idr_base_url, 'key': 'gene', 'value': gene_name}
+        url = screens_projects_url.format(**qs)
         for s in session.get(url).json()['screens']:
-            screenidList.append(s['id'])
-            
-    uniquelist = []
-    uniquelist1 = []
-    
-    if len(screenidList) == 0:
-        phenotypeIdsDataframe = pandas.DataFrame(
-            {'Name': uniquelist,
-             'Accession': uniquelist1,
-             'phenotypeAndScreenId': uniquelist1
-            })
-        return phenotypeIdsDataframe
-    
-    for sid in screenidList:
+            screen_id_list.append(s['id'])
+
+    unique_list = []
+    unique_list_1 = []
+
+    if len(screen_id_list) == 0:
+        phenotype_ids_dataframe = pandas.DataFrame(
+            {'Name': unique_list,
+             'Accession': unique_list_1,
+             'phenotypeAndScreenId': unique_list_1})
+        return phenotype_ids_dataframe
+
+    for sid in screen_id_list:
         screen_id = sid
-        screenqs = {'base': IDR_BASE_URL, 'key': 'gene', 'value': gene_name, 'screen_id': screen_id}    
-        screenurl = PLATES_URL.format(**screenqs)
-        phenotypePerScreen = []
-        phenotypeIdPerScreen = []
-        screenIdForPhenotype = []
+        screenqs = {'base': idr_base_url, 'key': 'gene',
+                    'value': gene_name, 'screen_id': screen_id}
+        screenurl = plates_url.format(**screenqs)
+        phenotype_per_screen = []
+        phenotype_id_per_screen = []
+        t_name = 'Phenotype Term Name'
+        t_access = 'Phenotype Term Accession'
         for p in session.get(screenurl).json()['plates']:
             plate_id = p['id']
-            imageqs = {'base': IDR_BASE_URL, 'key': 'gene', 'value': gene_name, 'parent_type': 'plate', 'parent_id': plate_id}
-            plateurl = IMAGES_URL.format(**imageqs)
+            imageqs = {'base': idr_base_url, 'key': 'gene',
+                       'value': gene_name, 'parent_type': 'plate',
+                       'parent_id': plate_id}
+            plateurl = images_url.format(**imageqs)
             for i in session.get(plateurl).json()['images']:
                 image_id = i['id']
-                qs = {'base': IDR_BASE_URL, 'type': 'image', 'image_id': image_id}
-                url = MAP_URL.format(**qs)
+                qs = {'base': idr_base_url,
+                      'type': 'image',
+                      'image_id': image_id}
+                url = map_url.format(**qs)
                 for a in session.get(url).json()['annotations']:
-                    namespace = a['ns']
                     for v in a['values']:
                         key = v[0]
                         value = v[1]
-                        if key.startswith('Phenotype Term Name') & key.endswith('Phenotype Term Name'):
-                            phenotypePerScreen.append(value)
-                        if key.startswith('Phenotype Term Accession') & key.endswith('Phenotype Term Accession'):
-                            phenotypeIdPerScreen.append(value)
-                            
-        uniquelist = uniquelist + list(set(phenotypePerScreen))
-        uniquelist1 = uniquelist1 + list(set(phenotypeIdPerScreen))
-        uniquelist2 = [screen_id] * len(uniquelist)
+                        if key.startswith(t_name) & key.endswith(t_name):
+                            phenotype_per_screen.append(value)
+                        if key.startswith(t_access) & key.endswith(t_access):
+                            phenotype_id_per_screen.append(value)
 
-        phenotypeIdsDataframe = pandas.DataFrame(
-            {'Name': uniquelist,
-             'Accession': uniquelist1,
-             'phenotypeAndScreenId': uniquelist2
-            })
-        
-    return phenotypeIdsDataframe
+        unique_list = unique_list + list(set(phenotype_per_screen))
+        unique_list_1 = unique_list_1 + list(set(phenotype_id_per_screen))
+        unique_list_2 = [screen_id] * len(unique_list)
+
+        phenotype_ids_dataframe = pandas.DataFrame(
+            {'Name': unique_list,
+             'Accession': unique_list_1,
+             'phenotypeAndScreenId': unique_list_2})
+
+    return phenotype_ids_dataframe
