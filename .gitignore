@@ -2,3 +2,4 @@
 *.DS_Store
 dist
 idr_py.egg-info
+build
