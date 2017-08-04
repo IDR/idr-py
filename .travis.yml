@@ -9,3 +9,6 @@ before_install:
  - pip install flake8 pycodestyle pep8-naming
  - flake8 -v .
  - rst-lint README.rst
+
+script:
+ - python setup.py sdist install || exit 1
