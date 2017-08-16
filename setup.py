@@ -56,7 +56,8 @@ setup(name="idr-py",
           # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       author='The Open Microscopy Team',
       author_email='ome-devel@lists.openmicroscopy.org.uk',
-      license='GPL-2.0+', # https://spdx.org/licenses/
+      # https://spdx.org/licenses
+      license='GPL-2.0+',
       url="https://github.com/IDR/idr-py",
       download_url='https://github.com/IDR/idr-py/archive/v%s.tar.gz' % version,  # NOQA
       keywords=['Python', 'plugin'],
