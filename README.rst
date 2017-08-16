@@ -7,12 +7,13 @@
 IDR-PY
 ======
 
-TO BE ADDED
+Library with helper methods for accessing the Image Data Resource (IDR).
 
 Requirements
 ============
 
-TO BE ADDED
+ * OMERO.py 5.3.x
+ * Python 2.6+
 
 Installing from PyPI
 ====================
@@ -30,7 +31,7 @@ Install the app using `pip <https://pip.pypa.io/en/stable/>`_:
 License
 -------
 
-TO BE ADDED 
+This project, similar to many Open Microscopy Environment (OME) projects, is licensed under the terms of the GNU General Public License (GPL) v2 or later.
 
 Copyright
 ---------
