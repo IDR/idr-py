@@ -2,7 +2,6 @@
 Helper functions for accessing the IDR from within IPython notebooks.
 """
 import pandas
-from idr import create_http_session
 from omero.rtypes import rlist, rstring, unwrap
 from omero.sys import ParametersI
 
@@ -109,21 +108,19 @@ def annotation_ids_by_field(conn,
     return unwrap(conn.getQueryService().projection(q, params))[0]
 
 
-def get_phenotypes_for_gene(gene_name, screenid=None):
+def get_phenotypes_for_gene(idr_base_url, session, gene_name, screenid=None):
 
-    # initial data
-    idr_base_url = "http://idr.openmicroscopy.org"
+    """
+    Return a list of phenotype
+    for given case insensitive gene_name. (Uses the json api and python blitz gateway)
+    """
+
     v = "{base}/mapr/api/{key}/"
     screens_projects_url = v + "?value={value}"
     plates_url = v + "plates/?value={value}&id={screen_id}"
     images_url = v + "images/?value={value}&node={parent_type}&id={parent_id}"
     map_url = "{base}/webclient/api/annotations/?type=map&{type}={image_id}"
 
-    """
-    Return a list of phenotype
-    for given case insensitive gene_name. (Uses the json api)
-    """
-    session = create_http_session()
     screen_id_list = []
     if screenid is not None:
         screen_id_list.append(screenid)
@@ -183,3 +180,109 @@ def get_phenotypes_for_gene(gene_name, screenid=None):
              'phenotypeAndScreenId': unique_list_2})
 
     return phenotype_ids_dataframe
+
+def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list):
+    
+    """
+    Return a list of phenotypes (dataframe)
+    for given case insensitive gene_list. (Uses the json api and python blitz gateway)
+    """
+
+    f = FloatProgress(min=0, max=len(go_gene_list)))
+    display(f)
+
+    df = {}
+    totalPhenotypeName = []
+    totalPhenotypeAccession = []
+    totalScreenIds = []
+    testedgenes = []
+
+    phenotypeNameToAcc = {}
+    for gene in go_gene_list:
+
+        if gene.startswith("-"):
+            continue
+        entrezid = get_entrezid(gene)
+        ensembleid = get_ensembleid(gene)
+        f.value += 1 
+        gid = None
+        # search with the gene name
+        uniqueList = []
+        if len(uniqueList) == 0:
+            key = "GeneName"
+            gid = gene
+            uniqueList = get_phenotypes_for_gene(idr_base_url, session, gid)
+
+        # search with ensembleid if geneSymbol does not return any result
+        if len(uniqueList['Name']) == 0:
+            key = "EnsemblID"
+            for gid in ensembleid:
+                uniqueList = get_phenotypes_for_gene(idr_base_url, session, gid)
+                if len(uniqueList['Name']) != 0:
+                    break
+
+        # search with entrezid if gene symbol and ensembleid does not return any result 
+        if len(uniqueList) == 0:
+            key = "EntrezID"
+            for gid in entrezid:
+                uniqueList = get_phenotypes_for_gene(idr_base_url, session, gid)
+                if len(uniqueList['Name']) != 0:
+                    break
+
+        # List of genes from string which were part of IDR
+        if gid != None:
+            testedgenes.append(gid)
+
+        # Dataframe of genes from string which were part of IDR and had a phenotype associated with them
+        if len(uniqueList) != 0:
+
+            accname = uniqueList['Name']
+            accid = uniqueList['Accession']
+            scrid = uniqueList['phenotypeAndScreenId']
+
+            accnames = list(accname.values)
+            accids = list(accid.values)
+            idlist = []
+            for id in scrid:
+                idx = id.index('_')
+                idlist.append(id[:idx])
+
+            for idx,idx1 in enumerate(accnames):
+                phenotypeNameToAcc[accnames[idx]] = accids[idx]     
+
+            totalPhenotypeName = totalPhenotypeName + accnames
+            totalPhenotypeAccession = totalPhenotypeAccession + accids
+            totalScreenIds = totalScreenIds + list(scrid.values)
+
+            df[gene] = [entrezid, ensembleid, None, None, None, None,None]
+            df[gene][2] = key
+            df[gene][3] = gid
+            df[gene][4] = accnames
+            df[gene][5] = accids
+            df[gene][6] = idlist
+
+    genes = pandas.DataFrame.from_dict(df, orient='index')
+    genes.columns = ("Entrez", "Ensembl", "Key", "Value", "PhenotypeName", "PhenotypeAccession","ScreenIds")
+    totalphenotypelist = {}
+    totalphenotypelist['totalPhenotypeName'] = totalPhenotypeName
+    totalphenotypelist['totalPhenotypeAccession'] = totalPhenotypeAccession
+    totalphenotypelist['totalScreenIds'] = totalScreenIds
+    total_lists = pandas.DataFrame.from_dict(totalphenotypelist, orient='index')
+    
+    return [genes,total_lists]
+
+
+def get_organism_screenids(idr_base_url, session, organism):
+
+    """
+    Return a list of screen ids in IDR
+    for given case insensitive organism. (Uses the json api)
+    """
+
+    screenidList = []
+    qs = {'base': idr_base_url, 'key': 'organism', 'value': organism}
+    screens_projects_url = "{base}/mapr/api/{key}/?value={value}"
+    url = screens_projects_url.format(**qs)
+    for s in session.get(url).json()['screens']:
+        screenidList.append(s['id'])
+
