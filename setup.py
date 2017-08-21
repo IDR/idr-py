@@ -25,7 +25,7 @@ import os
 from setuptools import setup, find_packages
 
 
-version = "0.0.1"
+version = "0.0.2"
 
 
 # Utility function to read the README file.
@@ -39,28 +39,25 @@ def read(fname):
 setup(name="idr-py",
       packages=find_packages(exclude=['ez_setup']),
       version=version,
-      description="A collection of python files to analyze data",
+      description="Helper methods for accessing the Image Data Resource (IDR)",
       long_description=read('README.rst'),
       classifiers=[
-          'Development Status :: 5 - Production/Stable',
+          'Development Status :: 3 - Alpha',
           'Environment :: Web Environment',
           'Framework :: Django',
-          'Intended Audience :: End Users/Desktop',
+          'Intended Audience :: Developers',
           'Intended Audience :: Science/Research',
           'Natural Language :: English',
           'Operating System :: OS Independent',
           'Programming Language :: Python :: 2',
-          'Topic :: Internet :: WWW/HTTP',
-          'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-          'Topic :: Internet :: WWW/HTTP :: WSGI',
           'Topic :: Software Development :: Libraries :: '
-          'Application Frameworks',
-          'Topic :: Text Processing :: Markup :: HTML'
+          'Python Modules'
       ],  # Get strings from
           # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       author='The Open Microscopy Team',
       author_email='ome-devel@lists.openmicroscopy.org.uk',
-      license='AGPL-3.0',
+      # https://spdx.org/licenses
+      license='GPL-2.0+',
       url="https://github.com/IDR/idr-py",
       download_url='https://github.com/IDR/idr-py/archive/v%s.tar.gz' % version,  # NOQA
       keywords=['Python', 'plugin'],
