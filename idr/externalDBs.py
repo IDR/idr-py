@@ -10,16 +10,6 @@ import numpy as np
 from IPython.display import Image
 
 
-def genes_of_interest_from_go(go_term):
-    go_url = 'http://www.ebi.ac.uk/QuickGO'
-    term = '/GAnnotation?tax=9606&relType=IP&goid=%20' + go_term
-    url = go_url + term + '%20&format=tsv'
-    res = requests.get(url)
-    df = read_csv(StringIO(res.text), sep='\t', header=None)
-    c1 = df.ix[:, 3]
-    return np.unique(c1.values.ravel())
-
-
 def genes_of_interest_from_string(gene_names, no_of_interacting_partners):
     url = 'http://string-db.org/api/psi-mi-tab/interactions?identifier='
     limit = str(no_of_interacting_partners) + '&network_flavor=evidence'
@@ -90,3 +80,27 @@ def get_ensembleid(gene):
     for i in results.ix[:, 0]:
         ensembleid.append(i)
     return ensembleid
+
+def genes_of_interest_go(go_term, taxonomy_id):
+
+    url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='+ taxonomy_id + '&relType=IP&goid=%20' + go_term + '%20&format=tsv'
+    Res = requests.get(url)
+    df = read_csv(StringIO(Res.text), sep='\t', header=None)
+    c1 = df.iloc[:,3]
+    genes = list(set(np.unique(c1.values.ravel())) - set(['Symbol', '-']))
+    return genes
+
+def ensembleid_to_genesymbol(ensembleId):
+    
+    ensembleserver = "http://rest.ensembl.org/xrefs/id/"
+    url = ensembleserver + ensembleId + "?content-type=application/json;external_db=WikiGene"
+    res = requests.get(url)
+    if not res.ok:
+        return ensembleId
+    if "error" in res.text:
+        return ensembleId    
+    results = pandas.read_json(StringIO(res.text))
+    if results.empty:
+        return ensembleId
+    symbol = results['display_id'][0]   
+    return symbol
