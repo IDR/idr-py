@@ -32,16 +32,6 @@ def connection(host=None, user=None, password=None, port=4064):
     c.createSession(user, password)
     conn = BlitzGateway(client_obj=c)
 
-    # You are now logged in. In order to guarantee
-    # that the connection is closed if a notebook
-    # does not complete, we are installing a handler
-    # below. This is ONLY for use in a notebook
-
-    # http://stackoverflow.com/questions/40110540/jupyter-magic-to-handle-notebook-exceptions
-    def custom_exc(shell, etype, evalue, tb, tb_offset=None):
-        print "Closing IDR connection..."
-        c.__del__()
-        shell.showtraceback((etype, evalue, tb), tb_offset=tb_offset)
     print "Connected to IDR..."
     return conn
 
