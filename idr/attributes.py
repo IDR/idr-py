@@ -2,9 +2,13 @@
 Helper functions for accessing the IDR from within IPython notebooks.
 """
 import pandas
+from pandas import DataFrame
+
 from omero.rtypes import rlist, rstring, unwrap
 from omero.sys import ParametersI
 
+from externalDBs import get_entrezid, get_ensembleid
+from widgets import progress
 
 def attributes_by_attributes(conn,
                              name="Gene Symbol",
@@ -112,7 +116,7 @@ def get_phenotypes_for_gene(idr_base_url, session, gene_name, screenid=None):
 
     """
     Return a list of phenotype
-    for given case insensitive gene_name. (Uses the json api and python blitz gateway)
+    for given case insensitive gene_name. (Uses the json api)
     """
 
     v = "{base}/mapr/api/{key}/"
@@ -132,6 +136,7 @@ def get_phenotypes_for_gene(idr_base_url, session, gene_name, screenid=None):
 
     unique_list = []
     unique_list_1 = []
+    unique_list_2 = []
 
     if len(screen_id_list) == 0:
         phenotype_ids_dataframe = pandas.DataFrame(
@@ -147,6 +152,7 @@ def get_phenotypes_for_gene(idr_base_url, session, gene_name, screenid=None):
         screenurl = plates_url.format(**screenqs)
         phenotype_per_screen = []
         phenotype_id_per_screen = []
+        screen_ids = []
         t_name = 'Phenotype Term Name'
         t_access = 'Phenotype Term Accession'
         for p in session.get(screenurl).json()['plates']:
@@ -167,12 +173,13 @@ def get_phenotypes_for_gene(idr_base_url, session, gene_name, screenid=None):
                         value = v[1]
                         if key.startswith(t_name) & key.endswith(t_name):
                             phenotype_per_screen.append(value)
+                            screen_ids.append(str(screen_id) + '_' + value)
                         if key.startswith(t_access) & key.endswith(t_access):
                             phenotype_id_per_screen.append(value)
 
         unique_list = unique_list + list(set(phenotype_per_screen))
         unique_list_1 = unique_list_1 + list(set(phenotype_id_per_screen))
-        unique_list_2 = [screen_id] * len(unique_list)
+        unique_list_2 = unique_list_2 + list(set(screen_ids))
 
         phenotype_ids_dataframe = pandas.DataFrame(
             {'Name': unique_list,
@@ -181,30 +188,27 @@ def get_phenotypes_for_gene(idr_base_url, session, gene_name, screenid=None):
 
     return phenotype_ids_dataframe
 
-def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list):
+def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list, organism):
     
     """
     Return a list of phenotypes (dataframe)
-    for given case insensitive gene_list. (Uses the json api and python blitz gateway)
+    for given case insensitive gene_list. (Uses the json api)
     """
 
-    f = FloatProgress(min=0, max=len(go_gene_list)))
-    display(f)
-
-    df = {}
+    genedict = {}
     totalPhenotypeName = []
     totalPhenotypeAccession = []
     totalScreenIds = []
     testedgenes = []
 
     phenotypeNameToAcc = {}
-    for gene in go_gene_list:
+    for ids, gene in enumerate(go_gene_list):
 
         if gene.startswith("-"):
             continue
         entrezid = get_entrezid(gene)
         ensembleid = get_ensembleid(gene)
-        f.value += 1 
+
         gid = None
         # search with the gene name
         uniqueList = []
@@ -239,7 +243,7 @@ def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list):
             accname = uniqueList['Name']
             accid = uniqueList['Accession']
             scrid = uniqueList['phenotypeAndScreenId']
-
+            
             accnames = list(accname.values)
             accids = list(accid.values)
             idlist = []
@@ -254,23 +258,99 @@ def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list):
             totalPhenotypeAccession = totalPhenotypeAccession + accids
             totalScreenIds = totalScreenIds + list(scrid.values)
 
-            df[gene] = [entrezid, ensembleid, None, None, None, None,None]
-            df[gene][2] = key
-            df[gene][3] = gid
-            df[gene][4] = accnames
-            df[gene][5] = accids
-            df[gene][6] = idlist
+            genedict[gene] = [entrezid, ensembleid, None, None, None, None,None]
+            genedict[gene][2] = key
+            genedict[gene][3] = gid
+            genedict[gene][4] = accnames
+            genedict[gene][5] = accids
+            genedict[gene][6] = idlist
 
-    genes = pandas.DataFrame.from_dict(df, orient='index')
-    genes.columns = ("Entrez", "Ensembl", "Key", "Value", "PhenotypeName", "PhenotypeAccession","ScreenIds")
-    totalphenotypelist = {}
-    totalphenotypelist['totalPhenotypeName'] = totalPhenotypeName
-    totalphenotypelist['totalPhenotypeAccession'] = totalPhenotypeAccession
-    totalphenotypelist['totalScreenIds'] = totalScreenIds
-    total_lists = pandas.DataFrame.from_dict(totalphenotypelist, orient='index')
+        progress(ids+1, len(goGenelist), status='Iterating through gene list')
+
+    query_genes_dataframe = pandas.DataFrame.from_dict(genedict, orient='index')
+    query_genes_dataframe.columns = ("Entrez", "Ensembl", "Key", "Value", "PhenotypeName", "PhenotypeAccession","ScreenIds")
+
+    # get the screens to phenotypes map for the query genes
+    organism_screen_idlist = get_organism_screenids(idr_base_url, session, organism)
+    genes_scid_list = list(set([item for sublist in query_genes_dataframe['ScreenIds'].values for item in sublist]))
+    screen_to_phenotype_dictionary = {}
+    for scid in genes_scid_list:
+        if int(scid) in organism_screen_idlist:
+            content = [x for x in set(list(totalScreenIds)) if x.startswith(scid)]
+            for idx,item in enumerate(content):
+                idx1 = item.index('_')
+                content[idx] = item[idx1+1:]
+            screen_to_phenotype_dictionary[scid] = content
     
-    return [genes,total_lists]
+    return [query_genes_dataframe, screen_to_phenotype_dictionary]
 
+def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
+
+    """
+    Return a multi-dimensional dictionary with the following mapping,
+    similar_genes[screenid][phenotypename] = similar_genes_list (uses python blitz gateway)
+    """
+
+    intersectingQueryGenes = {}   
+    phenotypeSpecificGenes = {}
+    similar_genes = {}
+    overlap_genes = {}
+    scid_list = set(list(screen_to_phenotype_dictionary.keys()))
+    for i, sid in enumerate(set(scid_list)):
+
+        phlist = screentophenotype[sid]
+        similar_genes[str(sid)] = {}
+        overlap_genes[str(sid)] = {}
+        for phenotype in np.unique(phlist):
+
+            args = {
+                "name": "Phenotype Term Name",
+                "value": phenotype,
+                "ns": "openmicroscopy.org/mapr/phenotype",
+                "ns2": "openmicroscopy.org/mapr/gene",
+                "sId": sid
+            }
+
+            cc = attributes_by_attributes(conn, **args)
+            dataframe = pandas.DataFrame.from_dict(cc) 
+
+            if dataframe.empty:
+                continue
+
+            gene_list = []
+            for x in dataframe.iloc[:,0]:
+
+                key = x[0]
+                value = x[1]
+
+                if key == "Gene Identifier" and value.startswith("EN"):
+                    id = value
+                    gene_list.append(id)
+                if key == "Gene Symbol":
+                    geneSym = value
+                    gene_list.append(geneSym)        
+
+            ov_genes = set(gene_list).intersection(query_genes_list)
+
+            remove_duplicates = []
+            removed_genes = []
+            for g in ov_genes:
+                converted = g
+                if g.startswith('ENSG'):
+                    converted = convertEnsembleToGeneSymbol(g)
+                    removed_genes.append(g)
+                remove_duplicates.append(converted)
+
+            ov_genes = set(remove_duplicates)
+
+            if len(ov_genes) != 0:
+                setdiff_genes = set(gene_list) - ov_genes - set(removed_genes)
+                similar_genes[str(sid)][phenotype] = list(setdiff_genes)
+                overlap_genes[str(sid)][phenotype] = list(ov_genes)
+
+        progress(i+1, len(set(scid_list)), status='Iterating through screens')
+
+    return [similar_genes, overlap_genes]
 
 def get_organism_screenids(idr_base_url, session, organism):
 
@@ -279,10 +359,11 @@ def get_organism_screenids(idr_base_url, session, organism):
     for given case insensitive organism. (Uses the json api)
     """
 
-    screenidList = []
+    screen_id_list = []
     qs = {'base': idr_base_url, 'key': 'organism', 'value': organism}
     screens_projects_url = "{base}/mapr/api/{key}/?value={value}"
     url = screens_projects_url.format(**qs)
     for s in session.get(url).json()['screens']:
-        screenidList.append(s['id'])
+        screen_id_list.append(s['id'])
 
+    return screen_id_list
