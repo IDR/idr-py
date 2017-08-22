@@ -46,12 +46,11 @@ def connection(host=None, user=None, password=None, port=4064):
     return conn
 
 
-def create_http_session():
+def create_http_session(idr_base_url):
 
     """
     Create and return http session
     """
-    idr_base_url = "http://idr.openmicroscopy.org"
     index_page = "%s/webclient/?experimenter=-1" % idr_base_url
 
     # create http session
