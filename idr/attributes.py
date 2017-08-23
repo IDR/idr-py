@@ -10,6 +10,8 @@ from omero.sys import ParametersI
 from externalDBs import get_entrezid, get_ensembleid
 from widgets import progress
 
+import numpy as np
+
 def attributes_by_attributes(conn,
                              name="Gene Symbol",
                              value="ASH2L",
