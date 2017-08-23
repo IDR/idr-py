@@ -206,6 +206,7 @@ def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list, organism):
 
         if gene.startswith("-"):
             continue
+
         entrezid = get_entrezid(gene)
         ensembleid = get_ensembleid(gene)
 
@@ -265,7 +266,7 @@ def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list, organism):
             genedict[gene][5] = accids
             genedict[gene][6] = idlist
 
-        progress(ids+1, len(goGenelist), status='Iterating through gene list')
+        progress(ids+1, len(go_gene_list), status='Iterating through gene list')
 
     query_genes_dataframe = pandas.DataFrame.from_dict(genedict, orient='index')
     query_genes_dataframe.columns = ("Entrez", "Ensembl", "Key", "Value", "PhenotypeName", "PhenotypeAccession","ScreenIds")
