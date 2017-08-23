@@ -299,7 +299,7 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
     scid_list = set(list(screen_to_phenotype_dictionary.keys()))
     for i, sid in enumerate(set(scid_list)):
 
-        phlist = screentophenotype[sid]
+        phlist = screen_to_phenotype_dictionary[sid]
         similar_genes[str(sid)] = {}
         overlap_genes[str(sid)] = {}
         for phenotype in np.unique(phlist):
