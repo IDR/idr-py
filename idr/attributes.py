@@ -311,7 +311,7 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
                 "value": phenotype,
                 "ns": "openmicroscopy.org/mapr/phenotype",
                 "ns2": "openmicroscopy.org/mapr/gene",
-                "sId": sid
+                "s_id": sid
             }
 
             cc = attributes_by_attributes(conn, **args)
