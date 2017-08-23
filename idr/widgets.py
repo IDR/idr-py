@@ -6,7 +6,7 @@ def select_organism_dropdown_widget(organisms_list):
 
     org_sel = widgets.Dropdown(
         options = organisms_list,
-        value = 'Homo Sapiens',
+        value = 'Homo sapiens',
         description = 'Select Organism:',
         disabled = False,
     )
