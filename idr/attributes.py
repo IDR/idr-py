@@ -7,7 +7,7 @@ from pandas import DataFrame
 from omero.rtypes import rlist, rstring, unwrap
 from omero.sys import ParametersI
 
-from externalDBs import get_entrezid, get_ensembleid
+from externalDBs import get_entrezid, get_ensembleid, ensembleid_to_genesymbol
 from widgets import progress
 
 import numpy as np
@@ -340,7 +340,7 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
             for g in ov_genes:
                 converted = g
                 if g.startswith('ENSG'):
-                    converted = convertEnsembleToGeneSymbol(g)
+                    converted = ensembleid_to_genesymbol(g)
                     removed_genes.append(g)
                 remove_duplicates.append(converted)
 
