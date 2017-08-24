@@ -2,7 +2,7 @@ import sys
 from IPython.html import widgets
 from IPython.display import display
 
-def select_option_dropdown_widget(organisms_list, dropdown_widget_name):
+def dropdown_widget(organisms_list, dropdown_widget_name, displaywidget=False):
 
     org_sel = widgets.Dropdown(
         options = organisms_list,
@@ -10,10 +10,11 @@ def select_option_dropdown_widget(organisms_list, dropdown_widget_name):
         description = dropdown_widget_name,
         disabled = False,
     )
-    display(org_sel)
+    if displaywidget == True:
+        display(org_sel)
     return org_sel
 
-def textbox_widget(temp_value, tool_tip, textbox_name):
+def textbox_widget(temp_value, tool_tip, textbox_name, displaywidget=False):
     
     text_box = widgets.Text(
         value = temp_value,
@@ -22,10 +23,11 @@ def textbox_widget(temp_value, tool_tip, textbox_name):
         disabled = False
     )
     
-    display(text_box)
+    if displaywidget == True:
+        display(text_box)
     return text_box
 
-def slider_widget(slider_name, tool_tip, minvalue, maxvalue, defaultvalue):
+def slider_widget(slider_name, tool_tip, minvalue, maxvalue, defaultvalue, displaywidget=False):
 
     slider = widgets.IntSlider(
         min = minvalue,
@@ -35,11 +37,25 @@ def slider_widget(slider_name, tool_tip, minvalue, maxvalue, defaultvalue):
         description = slider_name,
         disabled = False
     )
-
-    display(slider)
+    if displaywidget == True:
+        display(slider)
     return slider
 
+def html_widget(text, displaywidget=False):
+    
+    htmlwidget = widgets.HTML(
+        value="<b>" + text + "</b>",
+        placeholder='Some HTML',
+        description='',
+    )
+    if displaywidget == True:
+        display(htmlwidget)
+    return htmlwidget
+
+
+
 def progress(count, total, status=''):
+    
     bar_len = 60
     filled_len = int(round(bar_len * count / float(total)))
 
