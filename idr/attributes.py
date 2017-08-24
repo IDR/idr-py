@@ -278,7 +278,7 @@ def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list, organism):
     genes_scid_list = list(set([item for sublist in query_genes_dataframe['ScreenIds'].values for item in sublist]))
     screen_to_phenotype_dictionary = {}
     for scid in genes_scid_list:
-        if int(scid) in organism_screen_idlist:
+        if scid in organism_screen_idlist:
             content = [x for x in set(list(totalScreenIds)) if x.startswith(scid)]
             for idx,item in enumerate(content):
                 idx1 = item.index('_')
@@ -367,6 +367,6 @@ def get_organism_screenids(idr_base_url, session, organism):
     screens_projects_url = "{base}/mapr/api/{key}/?value={value}"
     url = screens_projects_url.format(**qs)
     for s in session.get(url).json()['screens']:
-        screen_id_list.append(s['id'])
+        screen_id_list.append(str(s['id']))
 
     return screen_id_list
