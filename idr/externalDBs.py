@@ -19,7 +19,7 @@ def genes_of_interest_from_string(gene_names, no_of_interacting_partners):
     res = requests.get(url)
     df = read_csv(StringIO(res.text), sep='\t', header=None)
     c1 = df.ix[:, 2:3]
-    return np.unique(c1.values.ravel())
+    return c1
 
 
 def network_of_interest(gene_names, no_of_interacting_partners):
