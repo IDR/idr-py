@@ -10,15 +10,14 @@ import numpy as np
 from IPython.display import Image
 
 
-def genes_of_interest_from_string(gene_names, no_of_interacting_partners):
-    url = 'http://string-db.org/api/psi-mi-tab/interactions?identifier='
-    limit = str(no_of_interacting_partners) + '&network_flavor=evidence'
+def genes_of_interest_from_string(gene_names, no_of_interacting_partners, taxonomyid):
+    url = 'http://string-db.org/api/psi-mi-tab/interactionsList?identifiers='
     for g in gene_names:
-        url = url + g + '%0D'
-    url = url + '&limit=' + limit
+        url = url + g + '%250D'
+    url = url + '&limit=' + str(no_of_interacting_partners) + '&network_flavor=evidence&species=' + taxonomyid
     res = requests.get(url)
     df = read_csv(StringIO(res.text), sep='\t', header=None)
-    c1 = df.ix[:, 2:3]
+    c1 = df.iloc[:, 2:3]
     return c1
 
 
