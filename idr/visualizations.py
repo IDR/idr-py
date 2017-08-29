@@ -5,6 +5,8 @@ from IPython.display import clear_output
 import matplotlib.pyplot as plt
 import pandas
 
+from externalDBs import ensembleid_to_genesymbol
+
 def plot_idr_attributes(primary_dictionary, secondary_dictionary, plot_title, Filter_by_category, Threshold_for_category, Threshold_for_plot):
     gene_counts = []  
     screenids_removed = []
