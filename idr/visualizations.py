@@ -5,7 +5,7 @@ from IPython.display import clear_output
 import matplotlib.pyplot as plt
 import pandas
 
-def plot_idr_attributes(primary_dictionary, secondary_dictionary, Filter_by_category, Threshold_for_category, Threshold_for_plot):
+def plot_idr_attributes(primary_dictionary, secondary_dictionary, plot_title, Filter_by_category, Threshold_for_category, Threshold_for_plot):
     gene_counts = []  
     screenids_removed = []
     phenotypes_removed = []
@@ -14,6 +14,7 @@ def plot_idr_attributes(primary_dictionary, secondary_dictionary, Filter_by_cate
         
         phenolist = []
         screens_list = []
+        query_list = []
         for phenoid in primary_dictionary[screenid].keys():
             phenolist = primary_dictionary[screenid][phenoid]
             phenolist1 = secondary_dictionary[screenid][phenoid]
@@ -22,6 +23,7 @@ def plot_idr_attributes(primary_dictionary, secondary_dictionary, Filter_by_cate
                     phenolist = []
                     phenotypes_removed.append(phenoid)
             screens_list = screens_list + phenolist
+            query_list = query_list + phenolist1
         
         if Filter_by_category == 'Screens':
             screens_list = list(set(screens_list)) 
@@ -31,7 +33,6 @@ def plot_idr_attributes(primary_dictionary, secondary_dictionary, Filter_by_cate
             screenids_removed.append(screenid)
 
     letter_counts = Counter(gene_counts)
-
     keystoremove = []
     for key, value in letter_counts.viewitems():
         if value < Threshold_for_plot:
@@ -39,9 +40,27 @@ def plot_idr_attributes(primary_dictionary, secondary_dictionary, Filter_by_cate
             
     for keys in keystoremove:
         del letter_counts[keys]
+        
+    query_list = list(set(query_list))
+    letter_counts = OrderedDict(letter_counts.most_common())
 
+    if primary_dictionary != secondary_dictionary:
+        dict1 = OrderedDict()
+        for k,v in letter_counts.iteritems():
+            key = k
+            if k.startswith('ENSG'):
+                key = ensembleid_to_genesymbol(k)
+                if key in dict1:
+                    value1 = dict1[key]
+                    if value1 > v:
+                        v = value1   
+            if key in list(query_list):
+                print ('in query list')
+                continue
+            dict1[key] = v
+        letter_counts = dict1 
     genes_of_interest = list(letter_counts.keys())
-    df = pandas.DataFrame.from_dict(OrderedDict(letter_counts.most_common()), orient='index')
+    df = pandas.DataFrame.from_dict(letter_counts, orient='index')
     if df.empty:
         print('DataFrame is empty, please reduce thresholds!')
     else:
