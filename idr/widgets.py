@@ -1,5 +1,5 @@
 import sys
-from IPython.html import widgets
+from ipywidgets import widgets
 from IPython.display import display
 
 def dropdown_widget(organisms_list, dropdown_widget_name, displaywidget=False):
