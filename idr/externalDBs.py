@@ -17,7 +17,7 @@ def genes_of_interest_from_string(gene_names, no_of_interacting_partners, taxono
     url = url + '&limit=' + str(no_of_interacting_partners) + '&network_flavor=evidence&species=' + taxonomyid
     res = requests.get(url)
     df = read_csv(StringIO(res.text), sep='\t', header=None)
-    c1 = df.iloc[:, 2:3]
+    c1 = df.loc[:, 2:3]
     return c1
 
 
@@ -41,9 +41,6 @@ def get_entrezid(gene):
     documentation for api:
 
     http://mygene.info/v3/api/#MyGene.info-gene-query-service-GET-Gene-query-service
-
-    Maybe : Could make the search with a taxonomy id as well,
-    to restrict it finding ids within a certain organism alone?
     """
     entrezurl = "http://mygene.info/v3/query?q="
     entrezurl = entrezurl+gene
