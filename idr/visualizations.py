@@ -3,6 +3,7 @@ from collections import OrderedDict
 from IPython import display
 from IPython.display import clear_output
 import matplotlib.pyplot as plt
+import pandas
 
 def plot_idr_attributes(primary_dictionary, secondary_dictionary, Filter_by_category, Threshold_for_category, Threshold_for_plot):
     %matplotlib inline
