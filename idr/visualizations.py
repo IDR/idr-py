@@ -89,7 +89,7 @@ def plot_string_interactions(primary_list, secondary_list,total_interactions_dat
     df.columns = [plot_title]
     df = df.sort_values(by=[plot_title], ascending=[False])
     ax = df.plot(kind='bar', figsize=(30, 15), fontsize=18)
-    ax.set_title("String Interactions of similar genes with " + plot_title + "(minimum one interaction atleast with query set)", fontsize=18)
+    ax.set_title("String Interactions of similar genes with " + plot_title, fontsize=18)
     ax.set_xlabel("Gene Symbols", fontsize=18)
     ax.set_ylabel("Number Of interactions in String Database", fontsize=18)
     ax.legend()
