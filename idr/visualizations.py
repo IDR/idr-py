@@ -95,7 +95,7 @@ def reformat_string_interactions(primary_list, secondary_list,total_interactions
     df['ColTotal'] = df.sum(axis=1)
     df.loc['RowTotal']= df.sum()
     df = df.sort_values(by='RowTotal', ascending=False, axis=1)
-    df = df.sort_values(by='ColTotal', ascendin
+    df = df.sort_values(by='ColTotal', ascending=False)
     df = df.drop(['RowTotal'])
     df = df.drop(['ColTotal'], axis=1)
     return df
