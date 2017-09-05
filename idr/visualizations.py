@@ -62,7 +62,10 @@ def plot_idr_attributes(primary_dictionary, secondary_dictionary, plot_title, Fi
             dict1[key] = v
         letter_counts = dict1 
     genes_of_interest = list(letter_counts.keys())
+    if '' in genes_of_interest:
+        del genes_of_interest['']
     df = pandas.DataFrame.from_dict(letter_counts, orient='index')
+
     if df.empty:
         print('DataFrame is empty, please reduce thresholds!')
         hf, ha = plt.subplots(1,1)
