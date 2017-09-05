@@ -82,7 +82,7 @@ def get_ensembleid(gene):
 
 def genes_of_interest_go(go_term, taxonomy_id):
 
-    url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='+ taxonomy_id + '&goid=%20' + go_term + '%20&format=tsv'
+    url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='+ taxonomy_id + '&relType=IP&goid=%20' + go_term + '%20&format=tsv'
     Res = requests.get(url)
     df = read_csv(StringIO(Res.text), sep='\t', header=None)
     c1 = df.iloc[:,3]
