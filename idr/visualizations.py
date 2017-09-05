@@ -61,9 +61,12 @@ def plot_idr_attributes(primary_dictionary, secondary_dictionary, plot_title, Fi
                 continue
             dict1[key] = v
         letter_counts = dict1 
+
+    if '' in letter_counts:
+        del letter_counts['']
+        
     genes_of_interest = list(letter_counts.keys())
-    if '' in genes_of_interest:
-        del genes_of_interest['']
+
     df = pandas.DataFrame.from_dict(letter_counts, orient='index')
 
     if df.empty:
