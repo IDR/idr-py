@@ -65,16 +65,18 @@ def plot_idr_attributes(primary_dictionary, secondary_dictionary, plot_title, Fi
     df = pandas.DataFrame.from_dict(letter_counts, orient='index')
     if df.empty:
         print('DataFrame is empty, please reduce thresholds!')
+        hf, ha = plt.subplots(1,1)
     else:
         ax = df.plot(kind='bar',figsize=(30, 15), fontsize=18)
         ax.set_title(plot_title, fontsize=18)
         ax.set_xlabel("Genes", fontsize=18)
         ax.set_ylabel("Number of Unique" + Filter_by_category + "in IDR", fontsize=18)
-        plt.show()
-        return screenids_removed, phenotypes_removed, genes_of_interest
+    
+    plt.show()    
+    return screenids_removed, phenotypes_removed, genes_of_interest
 
 
-def plot_string_interactions(primary_list, secondary_list,total_interactions_dataframe):
+def reformat_string_interactions(primary_list, secondary_list,total_interactions_dataframe):
     primary_genes = []
     dict1 = {}
     for gene in primary_list:
@@ -93,9 +95,7 @@ def plot_string_interactions(primary_list, secondary_list,total_interactions_dat
     df['ColTotal'] = df.sum(axis=1)
     df.loc['RowTotal']= df.sum()
     df = df.sort_values(by='RowTotal', ascending=False, axis=1)
-    df = df.sort_values(by='ColTotal', ascending=False, axis=0)
-    # print df.sum(axis=0)
-    # sorted_df = df.sort_values(by=df.sum(axis=0), ascending=False)
+    df = df.sort_values(by='ColTotal', ascendin
     df = df.drop(['RowTotal'])
     df = df.drop(['ColTotal'], axis=1)
     return df
