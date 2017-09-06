@@ -64,7 +64,7 @@ def plot_idr_attributes(primary_dictionary, secondary_dictionary, plot_title, Fi
 
     if '' in letter_counts:
         del letter_counts['']
-        
+
     genes_of_interest = list(letter_counts.keys())
 
     df = pandas.DataFrame.from_dict(letter_counts, orient='index')
@@ -82,7 +82,7 @@ def plot_idr_attributes(primary_dictionary, secondary_dictionary, plot_title, Fi
     return screenids_removed, phenotypes_removed, genes_of_interest
 
 
-def reformat_string_interactions(primary_list, secondary_list,total_interactions_dataframe):
+def plot_string_interactions(primary_list, secondary_list,total_interactions_dataframe):
     primary_genes = []
     dict1 = {}
     for gene in primary_list:
@@ -104,5 +104,15 @@ def reformat_string_interactions(primary_list, secondary_list,total_interactions
     df = df.sort_values(by='ColTotal', ascending=False)
     df = df.drop(['RowTotal'])
     df = df.drop(['ColTotal'], axis=1)
+
+    if len(df.columns)==1 or len(df.index)==1:
+        sns.heatmap(df)
+        plt.show()
+    elif df.empty:
+        print('No primary interactors found')
+    else:
+        g = sns.clustermap(df)
+        plt.setp(g.ax_heatmap.yaxis.get_majorticklabels(), rotation=0);
+        plt.show()
     return df
 
