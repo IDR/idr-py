@@ -87,32 +87,32 @@ def genes_of_interest_go(go_term, taxonomy_id):
 
     url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='
     + taxonomy_id + '&relType=IP&goid=%20' + go_term + '%20&format=tsv'
-    Res = requests.get(url)
-    df = read_csv(StringIO(Res.text), sep='\t', header=None)
+    res = requests.get(url)
+    df = read_csv(StringIO(res.text), sep='\t', header=None)
     c1 = df.iloc[:, 3]
     genes = list(set(np.unique(c1.values.ravel())) - set(['Symbol', '-']))
     if genes == []:
         url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='
         + taxonomy_id + '&goid=%20' + go_term + '%20&format=tsv'
-        Res = requests.get(url)
-        df = read_csv(StringIO(Res.text), sep='\t', header=None)
+        res = requests.get(url)
+        df = read_csv(StringIO(res.text), sep='\t', header=None)
         c1 = df.ix[:, 3]
         genes = list(set(np.unique(c1.values.ravel())) - set(['Symbol', '-']))
     return genes
 
 
-def ensembleid_to_genesymbol(ensembleId):
+def ensembleid_to_genesymbol(ensembleid):
 
     ensembleserver = "http://rest.ensembl.org/xrefs/id/"
-    url = ensembleserver + ensembleId
+    url = ensembleserver + ensembleid
     + "?content-type=application/json;external_db=WikiGene"
     res = requests.get(url)
     if not res.ok:
-        return ensembleId
+        return ensembleid
     if "error" in res.text:
-        return ensembleId
+        return ensembleid
     results = pandas.read_json(StringIO(res.text))
     if results.empty:
-        return ensembleId
+        return ensembleid
     symbol = results['display_id'][0]
     return symbol

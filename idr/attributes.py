@@ -345,8 +345,8 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
                     id = value
                     gene_list.append(id)
                 if key == "Gene Symbol":
-                    geneSym = value
-                    gene_list.append(geneSym)
+                    genesym = value
+                    gene_list.append(genesym)
 
             ov_genes = set(gene_list).intersection(query_genes_list)
 
