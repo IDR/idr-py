@@ -10,7 +10,7 @@ from externalDBs import ensembleid_to_genesymbol
 def plot_idr_attributes(primary_dictionary,
                         secondary_dictionary,
                         plot_title,
-                        Filter_by_category,
+                        filter_by_category,
                         Threshold_for_category,
                         Threshold_for_plot):
     gene_counts = []
@@ -24,14 +24,14 @@ def plot_idr_attributes(primary_dictionary,
         for phenoid in primary_dictionary[screenid].keys():
             phenolist = primary_dictionary[screenid][phenoid]
             phenolist1 = secondary_dictionary[screenid][phenoid]
-            if Filter_by_category == 'Phenotypes':
+            if filter_by_category == 'Phenotypes':
                 if len(phenolist1) < Threshold_for_category:
                     phenolist = []
                     phenotypes_removed.append(phenoid)
             screens_list = screens_list + phenolist
             query_list = query_list + phenolist1
 
-        if Filter_by_category == 'Screens':
+        if filter_by_category == 'Screens':
             screens_list = list(set(screens_list))
         if len(screens_list) >= Threshold_for_category:
             gene_counts = gene_counts + screens_list
@@ -78,7 +78,7 @@ def plot_idr_attributes(primary_dictionary,
         ax.set_title(plot_title, fontsize=18)
         ax.set_xlabel("Genes", fontsize=18)
         ax.set_ylabel("Number of Unique"
-                      + Filter_by_category + "in IDR", fontsize=18)
+                      + filter_by_category + "in IDR", fontsize=18)
     plt.show()
     return screenids_removed, phenotypes_removed, genes_of_interest
 
@@ -116,6 +116,6 @@ def plot_string_interactions(primary_list,
         print('No primary interactors found')
     else:
         g = sns.clustermap(df)
-        plt1.setp(g.ax_heatmap.yaxis.get_majorticklabels(), rotation=0);
+        plt1.setp(g.ax_heatmap.yaxis.get_majorticklabels(), rotation=0)
         plt1.show()
     return df
