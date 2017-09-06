@@ -10,11 +10,13 @@ import numpy as np
 from IPython.display import Image
 
 
-def genes_of_interest_from_string(gene_names, no_of_interacting_partners, taxonomyid):
+def genes_of_interest_from_string(gene_names,
+                                  no_of_interacting_partners, taxonomyid):
     url = 'http://string-db.org/api/psi-mi-tab/interactionsList?identifiers='
     for g in gene_names:
         url = url + g + '%250D'
-    url = url + '&limit=' + str(no_of_interacting_partners) + '&network_flavor=evidence&species=' + taxonomyid
+    url = url + '&limit=' + str(no_of_interacting_partners)
+    + '&network_flavor=evidence&species=' + taxonomyid
     res = requests.get(url)
     df = read_csv(StringIO(res.text), sep='\t', header=None)
     c1 = df.loc[:, 2:3]
@@ -48,7 +50,7 @@ def get_entrezid(gene):
     res = requests.get(entrezurl)
     if not res.ok:
         return []
-    
+
     results = pandas.read_json(StringIO(res.text))
 
     entrezid = []
@@ -80,32 +82,37 @@ def get_ensembleid(gene):
         ensembleid.append(i)
     return ensembleid
 
+
 def genes_of_interest_go(go_term, taxonomy_id):
 
-    url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='+ taxonomy_id + '&relType=IP&goid=%20' + go_term + '%20&format=tsv'
+    url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='
+    + taxonomy_id + '&relType=IP&goid=%20' + go_term + '%20&format=tsv'
     Res = requests.get(url)
     df = read_csv(StringIO(Res.text), sep='\t', header=None)
-    c1 = df.iloc[:,3]
+    c1 = df.iloc[:, 3]
     genes = list(set(np.unique(c1.values.ravel())) - set(['Symbol', '-']))
     if genes == []:
-        url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='+ taxonomy_id + '&goid=%20' + go_term + '%20&format=tsv'
+        url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='
+        + taxonomy_id + '&goid=%20' + go_term + '%20&format=tsv'
         Res = requests.get(url)
         df = read_csv(StringIO(Res.text), sep='\t', header=None)
-        c1 = df.ix[:,3]
+        c1 = df.ix[:, 3]
         genes = list(set(np.unique(c1.values.ravel())) - set(['Symbol', '-']))
     return genes
 
+
 def ensembleid_to_genesymbol(ensembleId):
-    
+
     ensembleserver = "http://rest.ensembl.org/xrefs/id/"
-    url = ensembleserver + ensembleId + "?content-type=application/json;external_db=WikiGene"
+    url = ensembleserver + ensembleId
+    + "?content-type=application/json;external_db=WikiGene"
     res = requests.get(url)
     if not res.ok:
         return ensembleId
     if "error" in res.text:
-        return ensembleId    
+        return ensembleId
     results = pandas.read_json(StringIO(res.text))
     if results.empty:
         return ensembleId
-    symbol = results['display_id'][0]   
+    symbol = results['display_id'][0]
     return symbol
