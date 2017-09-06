@@ -2,15 +2,12 @@
 Helper functions for accessing the IDR from within IPython notebooks.
 """
 import pandas
-from pandas import DataFrame
-
 from omero.rtypes import rlist, rstring, unwrap
 from omero.sys import ParametersI
-
 from externalDBs import get_entrezid, get_ensembleid, ensembleid_to_genesymbol
 from widgets import progress
-
 import numpy as np
+
 
 def attributes_by_attributes(conn,
                              name="Gene Symbol",
@@ -190,20 +187,21 @@ def get_phenotypes_for_gene(idr_base_url, session, gene_name, screenid=None):
 
     return phenotype_ids_dataframe
 
+
 def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list, organism):
-    
+
     """
     Return a list of phenotypes (dataframe)
     for given case insensitive gene_list. (Uses the json api)
     """
 
     genedict = {}
-    totalPhenotypeName = []
-    totalPhenotypeAccession = []
-    totalScreenIds = []
+    totalphenotypename = []
+    totalphenotypeaccession = []
+    totalscreenids = []
     testedgenes = []
 
-    phenotypeNameToAcc = {}
+    phenotypenametoacc = {}
     for ids, gene in enumerate(go_gene_list):
 
         if gene.startswith("-"):
@@ -214,39 +212,45 @@ def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list, organism):
 
         gid = None
         # search with the gene name
-        uniqueList = []
+        uniquelist = []
         if len(uniqueList) == 0:
             key = "GeneName"
             gid = gene
-            uniqueList = get_phenotypes_for_gene(idr_base_url, session, gid)
+            uniquelist = get_phenotypes_for_gene(
+                idr_base_url, session, gid)
 
-        # search with ensembleid if geneSymbol does not return any result
-        if len(uniqueList['Name']) == 0:
+        # search with ensembleid if geneSymbol does not 
+        # return any result
+        if len(uniquelist['Name']) == 0:
             key = "EnsemblID"
             for gid in ensembleid:
-                uniqueList = get_phenotypes_for_gene(idr_base_url, session, gid)
-                if len(uniqueList['Name']) != 0:
+                uniquelist = get_phenotypes_for_gene(
+                    idr_base_url, session, gid)
+                if len(uniquelist['Name']) != 0:
                     break
 
-        # search with entrezid if gene symbol and ensembleid does not return any result 
-        if len(uniqueList) == 0:
+        # search with entrezid if gene symbol and
+        # ensembleid does not return any result
+        if len(uniquelist) == 0:
             key = "EntrezID"
             for gid in entrezid:
-                uniqueList = get_phenotypes_for_gene(idr_base_url, session, gid)
-                if len(uniqueList['Name']) != 0:
+                uniquelist = get_phenotypes_for_gene(
+                    idr_base_url, session, gid)
+                if len(uniquelist['Name']) != 0:
                     break
 
         # List of genes from string which were part of IDR
-        if gid != None:
+        if gid is not None:
             testedgenes.append(gid)
 
-        # Dataframe of genes from string which were part of IDR and had a phenotype associated with them
-        if len(uniqueList) != 0:
+        # Dataframe of genes from string which were part of IDR 
+        # and had a phenotype associated with them
+        if len(uniquelist) != 0:
 
-            accname = uniqueList['Name']
-            accid = uniqueList['Accession']
-            scrid = uniqueList['phenotypeAndScreenId']
-            
+            accname = uniquelist['Name']
+            accid = uniquelist['Accession']
+            scrid = uniquelist['phenotypeAndScreenId']
+
             accnames = list(accname.values)
             accids = list(accid.values)
             idlist = []
@@ -254,32 +258,38 @@ def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list, organism):
                 idx = id.index('_')
                 idlist.append(id[:idx])
 
-            for idx,idx1 in enumerate(accnames):
-                phenotypeNameToAcc[accnames[idx]] = accids[idx]     
+            for idx, idx1 in enumerate(accnames):
+                phenotypenametoacc[accnames[idx]] = accids[idx]
 
-            totalPhenotypeName = totalPhenotypeName + accnames
-            totalPhenotypeAccession = totalPhenotypeAccession + accids
-            totalScreenIds = totalScreenIds + list(scrid.values)
+            totalphenotypename = totalphenotypename + accnames
+            totalphenotypeaccession = totalphenotypeaccession + accids
+            totalscreenids = totalscreenids + list(scrid.values)
 
-            genedict[gene] = [entrezid, ensembleid, None, None, None, None,None]
+            genedict[gene] = [entrezid, ensembleid, 
+                None, None, None, None, None]
             genedict[gene][2] = key
             genedict[gene][3] = gid
             genedict[gene][4] = accnames
             genedict[gene][5] = accids
             genedict[gene][6] = idlist
 
-        progress(ids+1, len(go_gene_list), status='Iterating through gene list')
+        progress(ids+1, len(go_gene_list), 
+            status='Iterating through gene list')
 
     query_genes_dataframe = pandas.DataFrame.from_dict(genedict, orient='index')
-    query_genes_dataframe.columns = ("Entrez", "Ensembl", "Key", "Value", "PhenotypeName", "PhenotypeAccession","ScreenIds")
+    query_genes_dataframe.columns = (
+        "Entrez", "Ensembl", "Key", "Value", "PhenotypeName", 
+        "PhenotypeAccession","ScreenIds")
 
     # get the screens to phenotypes map for the query genes
     organism_screen_idlist = get_organism_screenids(idr_base_url, session, organism)
-    genes_scid_list = list(set([item for sublist in query_genes_dataframe['ScreenIds'].values for item in sublist]))
+    genes_scid_list = list(set(
+        [item for sublist in query_genes_dataframe['ScreenIds'].values 
+        for item in sublist]))
     screen_to_phenotype_dictionary = {}
     for scid in genes_scid_list:
         if scid in organism_screen_idlist:
-            content = [x for x in set(list(totalScreenIds)) if x.startswith(scid)]
+            content = [x for x in set(list(totalscreenids)) if x.startswith(scid)]
             for idx,item in enumerate(content):
                 idx1 = item.index('_')
                 content[idx] = item[idx1+1:]
