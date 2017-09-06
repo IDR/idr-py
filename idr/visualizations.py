@@ -5,6 +5,8 @@ from IPython.display import clear_output
 import matplotlib.pyplot as plt
 import pandas
 
+import seaborn as sns
+import matplotlib.pyplot as plt1
 from externalDBs import ensembleid_to_genesymbol
 
 def plot_idr_attributes(primary_dictionary, secondary_dictionary, plot_title, Filter_by_category, Threshold_for_category, Threshold_for_plot):
@@ -107,12 +109,12 @@ def plot_string_interactions(primary_list, secondary_list,total_interactions_dat
 
     if len(df.columns)==1 or len(df.index)==1:
         sns.heatmap(df)
-        plt.show()
+        plt1.show()
     elif df.empty:
         print('No primary interactors found')
     else:
         g = sns.clustermap(df)
-        plt.setp(g.ax_heatmap.yaxis.get_majorticklabels(), rotation=0);
-        plt.show()
+        plt1.setp(g.ax_heatmap.yaxis.get_majorticklabels(), rotation=0);
+        plt1.show()
     return df
 
