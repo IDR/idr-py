@@ -213,13 +213,13 @@ def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list, organism):
         gid = None
         # search with the gene name
         uniquelist = []
-        if len(uniqueList) == 0:
+        if len(uniquelist) == 0:
             key = "GeneName"
             gid = gene
             uniquelist = get_phenotypes_for_gene(
                 idr_base_url, session, gid)
 
-        # search with ensembleid if geneSymbol does not 
+        # search with ensembleid if geneSymbol does not
         # return any result
         if len(uniquelist['Name']) == 0:
             key = "EnsemblID"
@@ -243,7 +243,7 @@ def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list, organism):
         if gid is not None:
             testedgenes.append(gid)
 
-        # Dataframe of genes from string which were part of IDR 
+        # Dataframe of genes from string which were part of IDR
         # and had a phenotype associated with them
         if len(uniquelist) != 0:
 
@@ -265,47 +265,52 @@ def get_phenotypes_for_genelist(idr_base_url, session, go_gene_list, organism):
             totalphenotypeaccession = totalphenotypeaccession + accids
             totalscreenids = totalscreenids + list(scrid.values)
 
-            genedict[gene] = [entrezid, ensembleid, 
-                None, None, None, None, None]
+            genedict[gene] = [entrezid, ensembleid,
+                              None, None, None, None, None]
             genedict[gene][2] = key
             genedict[gene][3] = gid
             genedict[gene][4] = accnames
             genedict[gene][5] = accids
             genedict[gene][6] = idlist
 
-        progress(ids+1, len(go_gene_list), 
-            status='Iterating through gene list')
+        progress(ids+1, len(go_gene_list),
+                 status='Iterating through gene list')
 
-    query_genes_dataframe = pandas.DataFrame.from_dict(genedict, orient='index')
-    query_genes_dataframe.columns = (
-        "Entrez", "Ensembl", "Key", "Value", "PhenotypeName", 
-        "PhenotypeAccession","ScreenIds")
+    query_genes_dataframe = pandas.DataFrame.from_dict(genedict,
+                                                       orient='index')
+    query_genes_dataframe.columns = ("Entrez", "Ensembl",
+                                     "Key", "Value", "PhenotypeName",
+                                     "PhenotypeAccession", "ScreenIds")
 
     # get the screens to phenotypes map for the query genes
-    organism_screen_idlist = get_organism_screenids(idr_base_url, session, organism)
-    genes_scid_list = list(set(
-        [item for sublist in query_genes_dataframe['ScreenIds'].values 
-        for item in sublist]))
+    organism_screen_idlist = get_organism_screenids(idr_base_url,
+                                                    session, organism)
+    genes_scid_list = [item for sublist in
+                       query_genes_dataframe['ScreenIds'].values
+                       for item in sublist]
+    genes_scid_list = list(set(genes_scid_list))
     screen_to_phenotype_dictionary = {}
     for scid in genes_scid_list:
         if scid in organism_screen_idlist:
-            content = [x for x in set(list(totalscreenids)) if x.startswith(scid)]
-            for idx,item in enumerate(content):
+            content = [x for x in set(list(totalscreenids))
+                       if x.startswith(scid)]
+            for idx, item in enumerate(content):
                 idx1 = item.index('_')
                 content[idx] = item[idx1+1:]
             screen_to_phenotype_dictionary[scid] = content
-    
+
     return [query_genes_dataframe, screen_to_phenotype_dictionary]
+
 
 def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
 
     """
-    Return a multi-dimensional dictionary with the following mapping,
-    similar_genes[screenid][phenotypename] = similar_genes_list (uses python blitz gateway)
+    Return a multi-dimensional dictionary with the
+    following mapping,
+    similar_genes[screenid][phenotypename] = similar_genes_list
+    (uses python blitz gateway)
     """
 
-    intersectingQueryGenes = {}   
-    phenotypeSpecificGenes = {}
     similar_genes = {}
     overlap_genes = {}
     scid_list = set(list(screen_to_phenotype_dictionary.keys()))
@@ -325,13 +330,13 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
             }
 
             cc = attributes_by_attributes(conn, **args)
-            dataframe = pandas.DataFrame.from_dict(cc) 
+            dataframe = pandas.DataFrame.from_dict(cc)
 
             if dataframe.empty:
                 continue
 
             gene_list = []
-            for x in dataframe.iloc[:,0]:
+            for x in dataframe.iloc[:, 0]:
 
                 key = x[0]
                 value = x[1]
@@ -341,7 +346,7 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
                     gene_list.append(id)
                 if key == "Gene Symbol":
                     geneSym = value
-                    gene_list.append(geneSym)        
+                    gene_list.append(geneSym)
 
             ov_genes = set(gene_list).intersection(query_genes_list)
 
@@ -364,6 +369,7 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
         progress(i+1, len(set(scid_list)), status='Iterating through screens')
 
     return [similar_genes, overlap_genes]
+
 
 def get_organism_screenids(idr_base_url, session, organism):
 
