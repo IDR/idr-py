@@ -11,8 +11,8 @@ def plot_idr_attributes(primary_dictionary,
                         secondary_dictionary,
                         plot_title,
                         filter_by_category,
-                        Threshold_for_category,
-                        Threshold_for_plot):
+                        threshold_for_category,
+                        threshold_for_plot):
     gene_counts = []
     screenids_removed = []
     phenotypes_removed = []
@@ -25,7 +25,7 @@ def plot_idr_attributes(primary_dictionary,
             phenolist = primary_dictionary[screenid][phenoid]
             phenolist1 = secondary_dictionary[screenid][phenoid]
             if filter_by_category == 'Phenotypes':
-                if len(phenolist1) < Threshold_for_category:
+                if len(phenolist1) < threshold_for_category:
                     phenolist = []
                     phenotypes_removed.append(phenoid)
             screens_list = screens_list + phenolist
@@ -33,14 +33,14 @@ def plot_idr_attributes(primary_dictionary,
 
         if filter_by_category == 'Screens':
             screens_list = list(set(screens_list))
-        if len(screens_list) >= Threshold_for_category:
+        if len(screens_list) >= threshold_for_category:
             gene_counts = gene_counts + screens_list
         else:
             screenids_removed.append(screenid)
     letter_counts = Counter(gene_counts)
     keystoremove = []
     for key, value in letter_counts.viewitems():
-        if value < Threshold_for_plot:
+        if value < threshold_for_plot:
             keystoremove.append(key)
     for keys in keystoremove:
         del letter_counts[keys]
