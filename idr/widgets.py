@@ -2,60 +2,73 @@ import sys
 from ipywidgets import widgets
 from IPython.display import display
 
-def dropdown_widget(organisms_list, dropdown_widget_name, displaywidget=False):
+
+def dropdown_widget(organisms_list,
+                    dropdown_widget_name,
+                    displaywidget=False):
 
     org_sel = widgets.Dropdown(
-        options = organisms_list,
-        value = organisms_list[0],
-        description = dropdown_widget_name,
-        disabled = False,
+        options=organisms_list,
+        value=organisms_list[0],
+        description=dropdown_widget_name,
+        disabled=False,
     )
-    if displaywidget == True:
+    if displaywidget is True:
         display(org_sel)
     return org_sel
 
-def textbox_widget(temp_value, tool_tip, textbox_name, displaywidget=False):
-    
+
+def textbox_widget(temp_value,
+                   tool_tip,
+                   textbox_name,
+                   displaywidget=False):
+
     text_box = widgets.Text(
-        value = temp_value,
-        placeholder = tool_tip,
-        description = textbox_name,
-        disabled = False
+        value=temp_value,
+        placeholder=tool_tip,
+        description=textbox_name,
+        disabled=False
     )
-    
-    if displaywidget == True:
+
+    if displaywidget is True:
         display(text_box)
     return text_box
 
-def slider_widget(slider_name, tool_tip, minvalue, maxvalue, defaultvalue, displaywidget=False):
+
+def slider_widget(slider_name,
+                  tool_tip,
+                  minvalue,
+                  maxvalue,
+                  defaultvalue,
+                  displaywidget=False):
 
     slider = widgets.IntSlider(
-        min = minvalue,
-        max = maxvalue,
-        value = defaultvalue,
-        placeholder = tool_tip,
-        description = slider_name,
-        disabled = False
+        min=minvalue,
+        max=maxvalue,
+        value=defaultvalue,
+        placeholder=tool_tip,
+        description=slider_name,
+        disabled=False
     )
-    if displaywidget == True:
+    if displaywidget is True:
         display(slider)
     return slider
 
+
 def html_widget(text, displaywidget=False):
-    
+
     htmlwidget = widgets.HTML(
         value="<b>" + text + "</b>",
         placeholder='Some HTML',
         description='',
     )
-    if displaywidget == True:
+    if displaywidget is True:
         display(htmlwidget)
     return htmlwidget
 
 
-
 def progress(count, total, status=''):
-    
+
     bar_len = 60
     filled_len = int(round(bar_len * count / float(total)))
 
@@ -63,4 +76,8 @@ def progress(count, total, status=''):
     bar = '=' * filled_len + '-' * (bar_len - filled_len)
 
     sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
-    sys.stdout.flush()  # As suggested by Rom Ruben (see: http://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console/27871113#comment50529068_27871113)
+    # As suggested by Rom Ruben
+    # (see: http://stackoverflow.com/
+    # questions/3173320/text-progress-bar-in-the-console/
+    # 27871113#comment50529068_27871113)
+    sys.stdout.flush()
