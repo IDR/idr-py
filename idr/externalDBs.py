@@ -85,8 +85,11 @@ def get_ensembleid(gene):
 
 def genes_of_interest_go(go_term, taxonomy_id):
 
-    url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='
-    + taxonomy_id + '&relType=IP&goid=%20' + go_term + '%20&format=tsv'
+    url = ('http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax=' +
+           taxonomy_id +
+           '&relType=IP&goid=%20' +
+           go_term +
+           '%20&format=tsv')
     res = requests.get(url)
     df = read_csv(StringIO(res.text), sep='\t', header=None)
     c1 = df.iloc[:, 3]
@@ -104,8 +107,8 @@ def genes_of_interest_go(go_term, taxonomy_id):
 def ensembleid_to_genesymbol(ensembleid):
 
     ensembleserver = "http://rest.ensembl.org/xrefs/id/"
-    url = ensembleserver + ensembleid
-    + "?content-type=application/json;external_db=WikiGene"
+    url = (ensembleserver + ensembleid +
+           "?content-type=application/json;external_db=WikiGene")
     res = requests.get(url)
     if not res.ok:
         return ensembleid
