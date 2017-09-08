@@ -19,7 +19,7 @@ def genes_of_interest_from_string(gene_names,
            '&network_flavor=evidence&species=' + taxonomyid)
     res = requests.get(url)
     df = read_csv(StringIO(res.text), sep='\t', header=None)
-    c1 = df.loc[:, 2:3]
+    c1 = df.loc[:, [2,3,14]]
     return c1
 
 

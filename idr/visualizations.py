@@ -86,20 +86,29 @@ def plot_idr_attributes(primary_dictionary,
 def plot_string_interactions(primary_list,
                              secondary_list,
                              total_interactions_dataframe):
-    primary_genes = []
     dict1 = {}
     for gene in primary_list:
         c2 = total_interactions_dataframe.loc[total_interactions_dataframe[2]
                                               == gene]
         c3 = total_interactions_dataframe.loc[total_interactions_dataframe[3]
                                               == gene]
+        c4 = pandas.concat([c2,c3])
+
         dict1[str(gene)] = {}
         totlist = set(list(c2[3]) + list(c3[2]))
         intwithsublist = totlist.intersection(secondary_list)
         if len(intwithsublist) > 0:
             for gene1 in intwithsublist:
-                dict1[str(gene)][gene1] = 1
-                primary_genes.append(gene1)
+                c5 = c4.loc[c4[2]==gene1] 
+                if c5.empty:
+                    c5 = c4.loc[c4[3]==gene1]
+                score = str(c5[14])
+                print score
+                stid = score.index('score:')
+                endid = score.index('|')
+                
+                dict1[str(gene)][gene1] = float(score[stid+6:endid])
+
     df = pandas.DataFrame.from_dict(dict1, orient='index')
     df = df.fillna(value=int(0))
     df['ColTotal'] = df.sum(axis=1)
