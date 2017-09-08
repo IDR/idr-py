@@ -103,7 +103,6 @@ def plot_string_interactions(primary_list,
                 if c5.empty:
                     c5 = c4.loc[c4[3]==gene1]
                 score = str(c5[14])
-                print score
                 stid = score.index('score:')
                 endid = score.index('|')
                 
