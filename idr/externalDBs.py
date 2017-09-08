@@ -15,8 +15,8 @@ def genes_of_interest_from_string(gene_names,
     url = 'http://string-db.org/api/psi-mi-tab/interactionsList?identifiers='
     for g in gene_names:
         url = url + g + '%250D'
-    url = url + '&limit=' + str(no_of_interacting_partners)
-    + '&network_flavor=evidence&species=' + taxonomyid
+    url = (url + '&limit=' + str(no_of_interacting_partners) +
+           '&network_flavor=evidence&species=' + taxonomyid)
     res = requests.get(url)
     df = read_csv(StringIO(res.text), sep='\t', header=None)
     c1 = df.loc[:, 2:3]
@@ -95,8 +95,11 @@ def genes_of_interest_go(go_term, taxonomy_id):
     c1 = df.iloc[:, 3]
     genes = list(set(np.unique(c1.values.ravel())) - set(['Symbol', '-']))
     if genes == []:
-        url = 'http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax='
-        + taxonomy_id + '&goid=%20' + go_term + '%20&format=tsv'
+        url = ('http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax=' +
+               taxonomy_id +
+               '&goid=%20' +
+               go_term +
+               '%20&format=tsv')
         res = requests.get(url)
         df = read_csv(StringIO(res.text), sep='\t', header=None)
         c1 = df.ix[:, 3]
