@@ -92,20 +92,19 @@ def plot_string_interactions(primary_list,
                                               == gene]
         c3 = total_interactions_dataframe.loc[total_interactions_dataframe[3]
                                               == gene]
-        c4 = pandas.concat([c2,c3])
+        c4 = pandas.concat([c2, c3])
 
         dict1[str(gene)] = {}
         totlist = set(list(c2[3]) + list(c3[2]))
         intwithsublist = totlist.intersection(secondary_list)
         if len(intwithsublist) > 0:
             for gene1 in intwithsublist:
-                c5 = c4.loc[c4[2]==gene1] 
+                c5 = c4.loc[c4[2] == gene1]
                 if c5.empty:
-                    c5 = c4.loc[c4[3]==gene1]
+                    c5 = c4.loc[c4[3] == gene1]
                 score = str(c5[14])
                 stid = score.index('score:')
                 endid = score.index('|')
-                
                 dict1[str(gene)][gene1] = float(score[stid+6:endid])
 
     df = pandas.DataFrame.from_dict(dict1, orient='index')
