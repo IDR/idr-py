@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import pandas
 import seaborn as sns
 from externalDBs import ensembleid_to_genesymbol
-import IPython
 
 
 def plot_idr_attributes(primary_dictionary,
@@ -81,7 +80,7 @@ def plot_idr_attributes(primary_dictionary,
         ax.set_ylabel("Number of Unique"
                       + filter_by_category + "in IDR", fontsize=18)
     try:
-        IPython.get_ipython
+        get_ipython
         plt.show()
     except:
         print("Plots are currently" +
@@ -125,7 +124,7 @@ def plot_string_interactions(primary_list,
     df = df.drop(['ColTotal'], axis=1)
 
     try:
-        IPython.get_ipython
+        get_ipython
 
         if len(df.columns) == 1 or len(df.index) == 1:
             sns.heatmap(df)
