@@ -12,7 +12,7 @@ from config import idr_base_url, organism
 class Test_attributes():
 
     session = create_http_session(idr_base_url)
-    conn = connection('idr.openmicroscopy.org', 'public', 'public')
+    conn = connection()
 
     def test_get_organism_screenids(self):
 
@@ -77,4 +77,3 @@ class Test_attributes():
         assert (isinstance(images, list) is True)
 
     conn.close()
-
