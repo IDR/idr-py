@@ -1,5 +1,5 @@
 from attributes import get_phenotypes_for_genelist
-from attributes import get_phenotypes_for_gene 
+from attributes import get_phenotypes_for_gene
 from attributes import get_similar_genes
 from attributes import get_organism_screenids
 from connections import create_http_session, connection
@@ -9,10 +9,11 @@ from config import *
 
 import pytest
 
+
 class Test_attributes():
 
     session = create_http_session(idr_base_url)
-    conn = connection(hostname, username, password, 4064)
+    conn = connection()
 
 
     def test_get_organism_screenids(self):
@@ -80,4 +81,4 @@ class Test_attributes():
         assert (isinstance(images, list) == True)
 
     conn.close()
-    
+

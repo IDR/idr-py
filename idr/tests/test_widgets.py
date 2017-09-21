@@ -2,6 +2,7 @@ import pytest
 from widgets import dropdown_widget, textbox_widget, html_widget, progress
 from ipywidgets import widgets as ipy_widget
 
+
 class Test_visualizations():
 
 

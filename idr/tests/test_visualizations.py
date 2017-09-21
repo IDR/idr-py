@@ -8,14 +8,14 @@ import pytest
 import pandas as pd
 from config import *
 
-
 import matplotlib.pyplot as plt
+
 
 class Test_visualizations():
 
     import matplotlib.pyplot as plt
     session = create_http_session(idr_base_url)
-    conn = connection(hostname, username, password, 4064)
+    conn = connection()
     
 
     def test_plot_string_interactions(self):
@@ -68,4 +68,3 @@ class Test_visualizations():
         assert isinstance(genes_of_interest, list)
         plt.close('all')
     conn.close()
-    
