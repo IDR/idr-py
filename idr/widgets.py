@@ -35,26 +35,6 @@ def textbox_widget(temp_value,
     return text_box
 
 
-def slider_widget(slider_name,
-                  tool_tip,
-                  minvalue,
-                  maxvalue,
-                  defaultvalue,
-                  displaywidget=False):
-
-    slider = widgets.IntSlider(
-        min=minvalue,
-        max=maxvalue,
-        value=defaultvalue,
-        placeholder=tool_tip,
-        description=slider_name,
-        disabled=False
-    )
-    if displaywidget is True:
-        display(slider)
-    return slider
-
-
 def html_widget(text, displaywidget=False):
 
     htmlwidget = widgets.HTML(

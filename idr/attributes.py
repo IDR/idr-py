@@ -2,9 +2,11 @@
 Helper functions for accessing the IDR from within IPython notebooks.
 """
 import pandas
+import omero.clients
 from omero.rtypes import rlist, rstring, unwrap
 from omero.sys import ParametersI
 from externalDBs import get_entrezid, get_ensembleid, ensembleid_to_genesymbol
+
 from widgets import progress
 import numpy as np
 

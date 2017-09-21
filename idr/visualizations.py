@@ -3,7 +3,6 @@ from collections import OrderedDict
 import matplotlib.pyplot as plt
 import pandas
 import seaborn as sns
-import matplotlib.pyplot as plt1
 from externalDBs import ensembleid_to_genesymbol
 
 
@@ -17,6 +16,7 @@ def plot_idr_attributes(primary_dictionary,
     screenids_removed = []
     phenotypes_removed = []
     genes_of_interest = []
+    query_list = []
     for screenid in list(primary_dictionary.keys()):
         phenolist = []
         screens_list = []
@@ -79,7 +79,12 @@ def plot_idr_attributes(primary_dictionary,
         ax.set_xlabel("Genes", fontsize=18)
         ax.set_ylabel("Number of Unique"
                       + filter_by_category + "in IDR", fontsize=18)
-    plt.show()
+    try:
+        get_ipython
+        plt.show()
+    except:
+        print("Plots are currently shown in the notebooks alone and not from the terminal")
+
     return screenids_removed, phenotypes_removed, genes_of_interest
 
 
@@ -116,13 +121,18 @@ def plot_string_interactions(primary_list,
     df = df.drop(['RowTotal'])
     df = df.drop(['ColTotal'], axis=1)
 
-    if len(df.columns) == 1 or len(df.index) == 1:
-        sns.heatmap(df)
-        plt1.show()
-    elif df.empty:
-        print('No primary interactors found')
-    else:
-        g = sns.clustermap(df)
-        plt1.setp(g.ax_heatmap.yaxis.get_majorticklabels(), rotation=0)
-        plt1.show()
+    try:
+        get_ipython
+        
+        if len(df.columns) == 1 or len(df.index) == 1:
+            sns.heatmap(df)
+            plt.show()
+        elif df.empty:
+            print('No primary interactors found')
+        else:
+            g = sns.clustermap(df)
+            plt.setp(g.ax_heatmap.yaxis.get_majorticklabels(), rotation=0)
+            plt.show()
+    except:
+        print("Plots are currently shown in the notebooks alone and not from the terminal")
     return df
