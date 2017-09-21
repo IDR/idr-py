@@ -1,19 +1,20 @@
+import pandas as pd
+import matplotlib.pyplot as plt
 from externalDBs import genes_of_interest_from_string
 from connections import create_http_session, connection
 from attributes import get_phenotypes_for_genelist
 from attributes import get_similar_genes
 from visualizations import plot_idr_attributes, plot_string_interactions
-import pandas as pd
-from config import idr_base_url, go_gene_list, taxonomy_id, organism
 
-import matplotlib.pyplot as plt
+from config import idr_base_url, go_gene_list, taxonomy_id, organism
 
 
 class Test_visualizations():
 
-    import matplotlib.pyplot as plt
-    session = create_http_session(idr_base_url)
-    conn = connection()
+    @classmethod
+    def setup_class(cls):
+        cls.session = create_http_session(idr_base_url)
+        cls.conn = connection()
 
     def test_plot_string_interactions(self):
 
@@ -47,11 +48,11 @@ class Test_visualizations():
 
         [screenids_removed,
          phenotypes_removed,
-         genes_of_interest] = plot_idr_attributes(overlap_genes,
-                                                  similar_genes,
+         genes_of_interest] = plot_idr_attributes(similar_genes,
+                                                  overlap_genes,
                                                   'int_test',
                                                   'Phenotypes',
-                                                  0, 0)
+                                                  0, 5)
 
         assert isinstance(screenids_removed, list) is True
         assert isinstance(phenotypes_removed, list) is True
@@ -69,4 +70,7 @@ class Test_visualizations():
         assert isinstance(phenotypes_removed, list) is True
         assert isinstance(genes_of_interest, list) is True
         plt.close('all')
-    conn.close()
+
+    @classmethod
+    def teardown_class(cls):
+        cls.conn.close()

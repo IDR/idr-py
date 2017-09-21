@@ -1,18 +1,25 @@
+import pandas as pd
 from attributes import get_phenotypes_for_genelist
 from attributes import get_phenotypes_for_gene
 from attributes import get_similar_genes
 from attributes import get_organism_screenids
 from connections import create_http_session, connection
 from images import images_by_phenotype
-import pandas as pd
 
 from config import idr_base_url, organism
 
 
 class Test_attributes():
 
-    session = create_http_session(idr_base_url)
-    conn = connection()
+    @classmethod
+    def setup_class(cls):
+        cls.session = create_http_session(idr_base_url)
+        cls.conn = connection()
+
+    def test_images_by_phenotype(self):
+
+        images = images_by_phenotype(self.conn)
+        assert (isinstance(images, list) is True)
 
     def test_get_organism_screenids(self):
 
@@ -71,9 +78,6 @@ class Test_attributes():
         assert isinstance(uniquelist, pd.DataFrame) is True
         assert uniquelist.empty is False
 
-    def test_images_by_phenotype(self):
-
-        images = images_by_phenotype(self.conn)
-        assert (isinstance(images, list) is True)
-
-    conn.close()
+    @classmethod
+    def teardown_class(cls):
+        cls.conn.close()

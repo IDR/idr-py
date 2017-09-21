@@ -1,12 +1,13 @@
+import pandas as pd
 from externalDBs import genes_of_interest_from_string
 from externalDBs import network_of_interest
 from externalDBs import get_entrezid
 from externalDBs import get_ensembleid
 from externalDBs import genes_of_interest_go
 from externalDBs import ensembleid_to_genesymbol
-from config import gene_symbol, taxonomy_id, endsemble_id
-import pandas as pd
 from IPython.display import Image
+
+from config import gene_symbol, taxonomy_id, endsemble_id
 
 
 class Test_external_dbs():
@@ -45,5 +46,7 @@ class Test_external_dbs():
     def test_ensembleid_to_genesymbol(self):
 
         gene_symbol = ensembleid_to_genesymbol(endsemble_id)
-        assert isinstance(gene_symbol, list)
+
+        assert (isinstance(gene_symbol, str)
+                or isinstance(gene_symbol, unicode)) is True
         assert (gene_symbol is not None) is True
