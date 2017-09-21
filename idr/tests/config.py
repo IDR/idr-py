@@ -1,4 +1,10 @@
-global organism, idr_base_url, hostname, username, taxonomy_id, endsemble_id, gene_symbol
+global organism
+global idr_base_url
+global hostname
+global username
+global taxonomy_id
+global endsemble_id
+global gene_symbol
 organism = 'Homo Sapiens'
 idr_base_url = 'http://idr.openmicroscopy.org'
 taxonomy_id = '9606'
