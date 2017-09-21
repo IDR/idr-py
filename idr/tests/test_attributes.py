@@ -14,7 +14,7 @@ class TestAttributes():
     @classmethod
     def setup_class(cls):
         cls.session = create_http_session(idr_base_url)
-        cls.conn = connection()
+        cls.conn = connection('idr.openmicroscopy.org', 'public', 'public')
 
     def test_images_by_phenotype(self):
 

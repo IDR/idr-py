@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 from externalDBs import genes_of_interest_from_string
 from connections import create_http_session, connection
 from attributes import get_phenotypes_for_genelist
@@ -14,7 +13,7 @@ class TestVisualizations():
     @classmethod
     def setup_class(cls):
         cls.session = create_http_session(idr_base_url)
-        cls.conn = connection()
+        cls.conn = connection('idr.openmicroscopy.org', 'public', 'public')
 
     def test_plot_string_interactions(self):
 
@@ -26,15 +25,14 @@ class TestVisualizations():
 
         df = plot_string_interactions(go_gene_list,
                                       go_gene_list,
-                                      intpartners)
+                                      intpartners,
+                                      False)
 
         assert isinstance(df, pd.DataFrame) is True
         assert df.empty is False
-        plt.close('all')
 
     def test_plot_idr_attributes(self):
 
-        import matplotlib.pyplot as plt
         [query_genes_df,
          screen_to_phenotype_dict] = get_phenotypes_for_genelist(idr_base_url,
                                                                  self.session,
@@ -52,7 +50,8 @@ class TestVisualizations():
                                                   overlap_genes,
                                                   'int_test',
                                                   'Phenotypes',
-                                                  0, 5)
+                                                  0, 5,
+                                                  False)
 
         assert isinstance(screenids_removed, list) is True
         assert isinstance(phenotypes_removed, list) is True
@@ -64,12 +63,12 @@ class TestVisualizations():
                                                   similar_genes,
                                                   'int_test',
                                                   'Screens',
-                                                  0, 0)
+                                                  0, 0,
+                                                  False)
 
         assert isinstance(screenids_removed, list) is True
         assert isinstance(phenotypes_removed, list) is True
         assert isinstance(genes_of_interest, list) is True
-        plt.close('all')
 
     @classmethod
     def teardown_class(cls):

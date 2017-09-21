@@ -11,7 +11,8 @@ def plot_idr_attributes(primary_dictionary,
                         plot_title,
                         filter_by_category,
                         threshold_for_category,
-                        threshold_for_plot):
+                        threshold_for_plot,
+                        plot_condition=True):
     gene_counts = []
     screenids_removed = []
     phenotypes_removed = []
@@ -79,10 +80,10 @@ def plot_idr_attributes(primary_dictionary,
         ax.set_xlabel("Genes", fontsize=18)
         ax.set_ylabel("Number of Unique"
                       + filter_by_category + "in IDR", fontsize=18)
-    try:
-        get_ipython
-        plt.show()
-    except:
+
+    if plot_condition is True:
+            plt.show()
+    else:
         print("Plots are currently" +
               "shown in the notebooks alone"
               " and not from the terminal")
@@ -92,7 +93,8 @@ def plot_idr_attributes(primary_dictionary,
 
 def plot_string_interactions(primary_list,
                              secondary_list,
-                             total_interactions_dataframe):
+                             total_interactions_dataframe,
+                             plot_condition=True):
     dict1 = {}
     for gene in primary_list:
         c2 = total_interactions_dataframe.loc[total_interactions_dataframe[2]
@@ -123,9 +125,7 @@ def plot_string_interactions(primary_list,
     df = df.drop(['RowTotal'])
     df = df.drop(['ColTotal'], axis=1)
 
-    try:
-        get_ipython
-
+    if plot_condition is True:
         if len(df.columns) == 1 or len(df.index) == 1:
             sns.heatmap(df)
             plt.show()
@@ -135,7 +135,7 @@ def plot_string_interactions(primary_list,
             g = sns.clustermap(df)
             plt.setp(g.ax_heatmap.yaxis.get_majorticklabels(), rotation=0)
             plt.show()
-    except:
+    else:
         print("Plots are currently" +
               "shown in the notebooks alone"
               " and not from the terminal")
