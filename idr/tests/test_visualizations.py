@@ -9,7 +9,7 @@ from visualizations import plot_idr_attributes, plot_string_interactions
 from config import idr_base_url, go_gene_list, taxonomy_id, organism
 
 
-class Test_visualizations():
+class TestVisualizations():
 
     @classmethod
     def setup_class(cls):

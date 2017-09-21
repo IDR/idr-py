@@ -9,7 +9,7 @@ from images import images_by_phenotype
 from config import idr_base_url, organism
 
 
-class Test_attributes():
+class TestAttributes():
 
     @classmethod
     def setup_class(cls):
@@ -38,7 +38,7 @@ class Test_attributes():
             else:
                 assert (organism_screen_idlist == []) is True
 
-    def test_get_phenotypes_for_geneList(self):
+    def test_get_phenotypes_for_genelist(self):
 
         gene_list = ['CCS', 'SOD2', 'SOD3', 'SOD1']
         [query_genes_df,

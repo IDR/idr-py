@@ -10,7 +10,7 @@ from IPython.display import Image
 from config import gene_symbol, taxonomy_id, endsemble_id
 
 
-class Test_external_dbs():
+class TestExternalDBs():
 
     def test_genes_of_interest_from_string(self):
         intpartners = genes_of_interest_from_string(gene_symbol,

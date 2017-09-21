@@ -1,7 +1,7 @@
 from widgets import dropdown_widget, textbox_widget, html_widget, progress
 
 
-class Test_visualizations():
+class TestWidgets():
 
     def test_textbox_widget(self):
         idr_username = textbox_widget('int_test',
