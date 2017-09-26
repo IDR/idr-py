@@ -12,7 +12,7 @@ from IPython.display import Image
 
 def genes_of_interest_from_string(gene_names,
                                   no_of_interacting_partners, taxonomyid):
-    url = 'http://string-db.org/api/psi-mi-tab/interactionsList?identifiers='
+    url = 'https://string-db.org/api/psi-mi-tab/interactionsList?identifiers='
     for g in gene_names:
         url = url + g + '%250D'
     url = (url + '&limit=' + str(no_of_interacting_partners) +
@@ -24,7 +24,7 @@ def genes_of_interest_from_string(gene_names,
 
 
 def network_of_interest(gene_names, no_of_interacting_partners):
-    url = 'http://string-db.org/api/image/network?identifier='
+    url = 'https://string-db.org/api/image/network?identifier='
     limit = str(no_of_interacting_partners) + '&network_flavor=evidence'
     for g in gene_names:
         url = url + g  # This doesn't look like it will work
@@ -44,7 +44,7 @@ def get_entrezid(gene):
 
     http://mygene.info/v3/api/#MyGene.info-gene-query-service-GET-Gene-query-service
     """
-    entrezurl = "http://mygene.info/v3/query?q="
+    entrezurl = "https://mygene.info/v3/query?q="
     entrezurl = entrezurl+gene
 
     res = requests.get(entrezurl)
@@ -68,7 +68,7 @@ def get_entrezid(gene):
 
 def get_ensembleid(gene):
 
-    ensembleserver = "http://rest.ensembl.org/xrefs/symbol/homo_sapiens/"
+    ensembleserver = "https://rest.ensembl.org/xrefs/symbol/homo_sapiens/"
     url = ensembleserver + gene + "?content-type=application/json"
 
     res = requests.get(url)
@@ -85,7 +85,7 @@ def get_ensembleid(gene):
 
 def genes_of_interest_go(go_term, taxonomy_id):
 
-    url = ('http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax=' +
+    url = ('https://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax=' +
            taxonomy_id +
            '&relType=IP&goid=%20' +
            go_term +
@@ -95,7 +95,7 @@ def genes_of_interest_go(go_term, taxonomy_id):
     c1 = df.iloc[:, 3]
     genes = list(set(np.unique(c1.values.ravel())) - set(['Symbol', '-']))
     if genes == []:
-        url = ('http://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax=' +
+        url = ('https://www.ebi.ac.uk/QuickGO-Old/GAnnotation?tax=' +
                taxonomy_id +
                '&goid=%20' +
                go_term +
@@ -109,7 +109,7 @@ def genes_of_interest_go(go_term, taxonomy_id):
 
 def ensembleid_to_genesymbol(ensembleid):
 
-    ensembleserver = "http://rest.ensembl.org/xrefs/id/"
+    ensembleserver = "https://rest.ensembl.org/xrefs/id/"
     url = (ensembleserver + ensembleid +
            "?content-type=application/json;external_db=WikiGene")
     res = requests.get(url)
