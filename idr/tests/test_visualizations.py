@@ -21,15 +21,15 @@ class TestVisualizations():
                                                     20,
                                                     taxonomy_id)
         assert isinstance(intpartners, pd.DataFrame)
-        assert intpartners.empty is False
+        assert not intpartners.empty
 
         df = plot_string_interactions(go_gene_list,
                                       go_gene_list,
                                       intpartners,
                                       False)
 
-        assert isinstance(df, pd.DataFrame) is True
-        assert df.empty is False
+        assert isinstance(df, pd.DataFrame)
+        assert not df.empty
 
     def test_plot_idr_attributes(self):
 
@@ -53,9 +53,9 @@ class TestVisualizations():
                                                   0, 5,
                                                   False)
 
-        assert isinstance(screenids_removed, list) is True
-        assert isinstance(phenotypes_removed, list) is True
-        assert isinstance(genes_of_interest, list) is True
+        assert isinstance(screenids_removed, list)
+        assert isinstance(phenotypes_removed, list)
+        assert isinstance(genes_of_interest, list)
 
         [screenids_removed,
          phenotypes_removed,
@@ -66,9 +66,9 @@ class TestVisualizations():
                                                   0, 0,
                                                   False)
 
-        assert isinstance(screenids_removed, list) is True
-        assert isinstance(phenotypes_removed, list) is True
-        assert isinstance(genes_of_interest, list) is True
+        assert isinstance(screenids_removed, list)
+        assert isinstance(phenotypes_removed, list)
+        assert isinstance(genes_of_interest, list)
 
     @classmethod
     def teardown_class(cls):

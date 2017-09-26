@@ -17,7 +17,7 @@ class TestExternalDBs():
                                                     20,
                                                     taxonomy_id)
         assert isinstance(intpartners, pd.DataFrame)
-        assert intpartners.empty is False
+        assert not intpartners.empty
 
     def test_network_of_interest(self):
         int_image = network_of_interest(gene_symbol,
@@ -27,7 +27,7 @@ class TestExternalDBs():
     def test_get_entrezid(self):
         entrezid = get_entrezid(gene_symbol)
         assert isinstance(entrezid, list)
-        assert (entrezid is not None) is True
+        assert (entrezid is not None)
         # could do a proper assert for the returned id, but
         # given the regular updates in ids this assert
         # will break very often
@@ -36,17 +36,17 @@ class TestExternalDBs():
     def test_get_ensembleid(self):
         ensembleid = get_ensembleid(gene_symbol)
         assert isinstance(ensembleid, list)
-        assert (ensembleid is not None) is True
+        assert (ensembleid is not None)
 
     def test_genes_of_interest_go(self):
         go_gene_list = genes_of_interest_go('GO:0005885', taxonomy_id)
         assert isinstance(go_gene_list, list)
-        assert (go_gene_list != []) is True
+        assert (go_gene_list != [])
 
     def test_ensembleid_to_genesymbol(self):
 
         gene_symbol = ensembleid_to_genesymbol(ensemble_id)
 
         assert (isinstance(gene_symbol, str)
-                or isinstance(gene_symbol, unicode)) is True
-        assert (gene_symbol is not None) is True
+                or isinstance(gene_symbol, unicode))
+        assert (gene_symbol is not None)

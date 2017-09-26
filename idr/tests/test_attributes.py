@@ -34,9 +34,9 @@ class TestAttributes():
                                                             self.session,
                                                             organism1)
             if idx < 4:
-                assert (organism_screen_idlist == []) is False
+                assert (organism_screen_idlist != [])
             else:
-                assert (organism_screen_idlist == []) is True
+                assert (organism_screen_idlist == [])
 
     def test_get_phenotypes_for_genelist(self):
 
@@ -47,21 +47,21 @@ class TestAttributes():
                                                                  gene_list,
                                                                  organism)
 
-        assert isinstance(query_genes_df, pd.DataFrame) is True
-        assert isinstance(screen_to_phenotype_dict, dict) is True
-        assert query_genes_df.empty is False
+        assert isinstance(query_genes_df, pd.DataFrame)
+        assert isinstance(screen_to_phenotype_dict, dict)
+        assert not query_genes_df.empty
         print screen_to_phenotype_dict
-        assert bool(screen_to_phenotype_dict) is False
+        assert not bool(screen_to_phenotype_dict)
 
         [similar_genes,
          overlap_genes] = get_similar_genes(self.conn,
                                             gene_list,
                                             screen_to_phenotype_dict)
 
-        assert isinstance(similar_genes, dict) is True
-        assert isinstance(overlap_genes, dict) is True
-        assert (similar_genes == []) is False
-        assert (overlap_genes == []) is False
+        assert isinstance(similar_genes, dict)
+        assert isinstance(overlap_genes, dict)
+        assert (similar_genes != [])
+        assert (overlap_genes != [])
 
     def test_get_phenotypes_for_gene(self):
 
@@ -70,13 +70,13 @@ class TestAttributes():
         uniquelist = get_phenotypes_for_gene(idr_base_url,
                                              self.session, gid)
 
-        assert isinstance(uniquelist, pd.DataFrame) is True
-        assert uniquelist.empty is False
+        assert isinstance(uniquelist, pd.DataFrame)
+        assert not uniquelist.empty
         uniquelist = get_phenotypes_for_gene(idr_base_url,
                                              self.session, gid, sid)
 
-        assert isinstance(uniquelist, pd.DataFrame) is True
-        assert uniquelist.empty is False
+        assert isinstance(uniquelist, pd.DataFrame)
+        assert not uniquelist.empty
 
     @classmethod
     def teardown_class(cls):
