@@ -7,7 +7,7 @@ from externalDBs import genes_of_interest_go
 from externalDBs import ensembleid_to_genesymbol
 from IPython.display import Image
 
-from config import gene_symbol, taxonomy_id, endsemble_id
+from config import gene_symbol, taxonomy_id, ensemble_id
 
 
 class TestExternalDBs():
@@ -45,7 +45,7 @@ class TestExternalDBs():
 
     def test_ensembleid_to_genesymbol(self):
 
-        gene_symbol = ensembleid_to_genesymbol(endsemble_id)
+        gene_symbol = ensembleid_to_genesymbol(ensemble_id)
 
         assert (isinstance(gene_symbol, str)
                 or isinstance(gene_symbol, unicode)) is True
