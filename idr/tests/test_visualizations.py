@@ -13,7 +13,7 @@ class TestVisualizations():
     @classmethod
     def setup_class(cls):
         cls.session = create_http_session(idr_base_url)
-        cls.conn = connection('idr.openmicroscopy.org', 'public', 'public')
+        cls.conn = connection()
 
     def test_plot_string_interactions(self):
 
