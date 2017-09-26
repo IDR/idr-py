@@ -6,7 +6,7 @@ global taxonomy_id
 global ensemble_id
 global gene_symbol
 organism = 'Homo Sapiens'
-idr_base_url = 'http://idr.openmicroscopy.org'
+idr_base_url = 'https://idr.openmicroscopy.org'
 taxonomy_id = '9606'
 ensemble_id = 'ENSG00000106526'
 gene_symbol = 'ACTR3C'
