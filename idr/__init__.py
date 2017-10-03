@@ -1,5 +1,5 @@
 from connections import connection
-from connections import createHTTPsession
+from connections import create_http_session
 
 from attributes import attributes_by_attributes
 from attributes import annotation_ids_by_field
