@@ -1,18 +1,18 @@
 import pandas as pd
-from externalDBs import genes_of_interest_from_string
-from connections import create_http_session, connection
-from attributes import get_phenotypes_for_genelist
-from attributes import get_similar_genes
-from visualizations import plot_idr_attributes, plot_string_interactions
+from idr import genes_of_interest_from_string
+from idr import create_http_session, connection
+from idr import get_phenotypes_for_genelist
+from idr import get_similar_genes
+from idr import plot_idr_attributes, plot_string_interactions
 
-from config import idr_base_url, go_gene_list, taxonomy_id, organism
+from config import go_gene_list, taxonomy_id, organism
 
 
 class TestVisualizations():
 
     @classmethod
     def setup_class(cls):
-        cls.session = create_http_session(idr_base_url)
+        cls.session = create_http_session()
         cls.conn = connection()
 
     def test_plot_string_interactions(self):
@@ -34,8 +34,7 @@ class TestVisualizations():
     def test_plot_idr_attributes(self):
 
         [query_genes_df,
-         screen_to_phenotype_dict] = get_phenotypes_for_genelist(idr_base_url,
-                                                                 self.session,
+         screen_to_phenotype_dict] = get_phenotypes_for_genelist(self.session,
                                                                  go_gene_list,
                                                                  organism)
         query_genes_list = list(query_genes_df['Value'])

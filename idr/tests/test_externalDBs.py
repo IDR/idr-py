@@ -1,10 +1,10 @@
 import pandas as pd
-from externalDBs import genes_of_interest_from_string
-from externalDBs import network_of_interest
-from externalDBs import get_entrezid
-from externalDBs import get_ensembleid
-from externalDBs import genes_of_interest_go
-from externalDBs import ensembleid_to_genesymbol
+from idr import genes_of_interest_from_string
+from idr import network_of_interest
+from idr import get_entrezid
+from idr import get_ensembleid
+from idr import genes_of_interest_go
+from idr import ensembleid_to_genesymbol
 from IPython.display import Image
 
 from config import gene_symbol, taxonomy_id, ensemble_id

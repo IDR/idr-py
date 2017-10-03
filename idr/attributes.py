@@ -291,8 +291,7 @@ def get_phenotypes_for_genelist(session,
                                      "PhenotypeAccession", "ScreenIds")
 
     # get the screens to phenotypes map for the query genes
-    organism_screen_idlist = get_organism_screenids(idr_base_url,
-                                                    session, organism)
+    organism_screen_idlist = get_organism_screenids(session, organism)
     genes_scid_list = [item for sublist in
                        query_genes_dataframe['ScreenIds'].values
                        for item in sublist]
@@ -379,7 +378,8 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
     return [similar_genes, overlap_genes]
 
 
-def get_organism_screenids(idr_base_url, session, organism):
+def get_organism_screenids(session, organism,
+                           idr_base_url="https://idr.openmicroscopy.org"):
 
     """
     Return a list of screen ids in IDR

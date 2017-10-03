@@ -1,19 +1,19 @@
 import pandas as pd
-from attributes import get_phenotypes_for_genelist
-from attributes import get_phenotypes_for_gene
-from attributes import get_similar_genes
-from attributes import get_organism_screenids
-from connections import create_http_session, connection
-from images import images_by_phenotype
+from idr import get_phenotypes_for_genelist
+from idr import get_phenotypes_for_gene
+from idr import get_similar_genes
+from idr import get_organism_screenids
+from idr import create_http_session, connection
+from idr import images_by_phenotype
 
-from config import idr_base_url, organism
+from config import organism
 
 
 class TestAttributes():
 
     @classmethod
     def setup_class(cls):
-        cls.session = create_http_session(idr_base_url)
+        cls.session = create_http_session()
         cls.conn = connection()
 
     def test_images_by_phenotype(self):
@@ -30,8 +30,7 @@ class TestAttributes():
                      'Mus musculus',
                      'Arabidopsis thaliana']
         for idx, organism1 in enumerate(organisms):
-            organism_screen_idlist = get_organism_screenids(idr_base_url,
-                                                            self.session,
+            organism_screen_idlist = get_organism_screenids(self.session,
                                                             organism1)
             if idx < 4:
                 assert (organism_screen_idlist != [])
@@ -42,8 +41,7 @@ class TestAttributes():
 
         gene_list = ['CCS', 'SOD2', 'SOD3', 'SOD1']
         [query_genes_df,
-         screen_to_phenotype_dict] = get_phenotypes_for_genelist(idr_base_url,
-                                                                 self.session,
+         screen_to_phenotype_dict] = get_phenotypes_for_genelist(self.session,
                                                                  gene_list,
                                                                  organism)
 
@@ -67,13 +65,11 @@ class TestAttributes():
 
         gid = 'ARPC2'
         sid = 206
-        uniquelist = get_phenotypes_for_gene(idr_base_url,
-                                             self.session, gid)
+        uniquelist = get_phenotypes_for_gene(self.session, gid)
 
         assert isinstance(uniquelist, pd.DataFrame)
         assert not uniquelist.empty
-        uniquelist = get_phenotypes_for_gene(idr_base_url,
-                                             self.session, gid, sid)
+        uniquelist = get_phenotypes_for_gene(self.session, gid, sid)
 
         assert isinstance(uniquelist, pd.DataFrame)
         assert not uniquelist.empty

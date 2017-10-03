@@ -1,4 +1,4 @@
-from widgets import dropdown_widget, textbox_widget, html_widget, progress
+from idr.widgets import dropdown_widget, textbox_widget, html_widget, progress
 
 
 class TestWidgets():
