@@ -116,7 +116,7 @@ def annotation_ids_by_field(conn,
 def get_phenotypes_for_gene(session,
                             gene_name,
                             screenid=None,
-                            idr_base_url="idr.openmicroscopy.org"):
+                            idr_base_url="https://idr.openmicroscopy.org"):
 
     """
     Return a list of phenotype
@@ -196,7 +196,7 @@ def get_phenotypes_for_gene(session,
 def get_phenotypes_for_genelist(session,
                                 go_gene_list,
                                 organism,
-                                idr_base_url="idr.openmicroscopy.org"):
+                                idr_base_url="https://idr.openmicroscopy.org"):
 
     """
     Return a list of phenotypes (dataframe)
@@ -224,16 +224,16 @@ def get_phenotypes_for_genelist(session,
         if len(uniquelist) == 0:
             key = "GeneName"
             gid = gene
-            uniquelist = get_phenotypes_for_gene(
-                idr_base_url, session, gid)
+            uniquelist = get_phenotypes_for_gene(session,
+                                                 gid)
 
         # search with ensembleid if geneSymbol does not
         # return any result
         if len(uniquelist['Name']) == 0:
             key = "EnsemblID"
             for gid in ensembleid:
-                uniquelist = get_phenotypes_for_gene(
-                    idr_base_url, session, gid)
+                uniquelist = get_phenotypes_for_gene(session,
+                                                     gid)
                 if len(uniquelist['Name']) != 0:
                     break
 
@@ -242,8 +242,8 @@ def get_phenotypes_for_genelist(session,
         if len(uniquelist) == 0:
             key = "EntrezID"
             for gid in entrezid:
-                uniquelist = get_phenotypes_for_gene(
-                    idr_base_url, session, gid)
+                uniquelist = get_phenotypes_for_gene(session,
+                                                     gid)
                 if len(uniquelist['Name']) != 0:
                     break
 
