@@ -113,7 +113,10 @@ def annotation_ids_by_field(conn,
     return unwrap(conn.getQueryService().projection(q, params))[0]
 
 
-def get_phenotypes_for_gene(session, gene_name, screenid=None, idr_base_url="idr.openmicroscopy.org"):
+def get_phenotypes_for_gene(session,
+                            gene_name,
+                            screenid=None,
+                            idr_base_url="idr.openmicroscopy.org"):
 
     """
     Return a list of phenotype
@@ -190,7 +193,10 @@ def get_phenotypes_for_gene(session, gene_name, screenid=None, idr_base_url="idr
     return phenotype_ids_dataframe
 
 
-def get_phenotypes_for_genelist(session, go_gene_list, organism, idr_base_url="idr.openmicroscopy.org"):
+def get_phenotypes_for_genelist(session,
+                                go_gene_list,
+                                organism,
+                                idr_base_url="idr.openmicroscopy.org"):
 
     """
     Return a list of phenotypes (dataframe)
