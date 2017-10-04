@@ -5,11 +5,12 @@ python: 2.7
 sudo: false
 
 before_install:
- - pip install restructuredtext_lint
- - pip install flake8 pycodestyle pep8-naming
+ - pip install -r test-requirements.txt
+ - omego download python --ice 3.6 --sym OMERO.py
  - flake8 -v .
  - rst-lint README.rst
 
 script:
  - python setup.py sdist install || exit 1
- 
+ - PYTHONPATH=OMERO.py/lib/python python -c 'import idr'
+ # TODO: Run tests
