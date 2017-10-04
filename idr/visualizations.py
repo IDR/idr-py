@@ -71,18 +71,17 @@ def plot_idr_attributes(primary_dictionary,
 
     df = pandas.DataFrame.from_dict(letter_counts, orient='index')
 
-    if df.empty:
-        print('DataFrame is empty, please reduce thresholds!')
-        hf, ha = plt.subplots(1, 1)
-    else:
-        ax = df.plot(kind='bar', figsize=(30, 15), fontsize=18)
-        ax.set_title(plot_title, fontsize=18)
-        ax.set_xlabel("Genes", fontsize=18)
-        ax.set_ylabel("Number of Unique"
-                      + filter_by_category + "in IDR", fontsize=18)
-
     if plot_condition is True:
-            plt.show()
+        if df.empty:
+            print('DataFrame is empty, please reduce thresholds!')
+            hf, ha = plt.subplots(1, 1)
+        else:
+            ax = df.plot(kind='bar', figsize=(30, 15), fontsize=18)
+            ax.set_title(plot_title, fontsize=18)
+            ax.set_xlabel("Genes", fontsize=18)
+            ax.set_ylabel("Number of Unique"
+                          + filter_by_category + "in IDR", fontsize=18)   
+        plt.show()
     else:
         print("Plots are currently" +
               "shown in the notebooks alone"
