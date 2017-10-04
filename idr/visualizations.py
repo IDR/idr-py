@@ -80,7 +80,7 @@ def plot_idr_attributes(primary_dictionary,
             ax.set_title(plot_title, fontsize=18)
             ax.set_xlabel("Genes", fontsize=18)
             ax.set_ylabel("Number of Unique"
-                          + filter_by_category + "in IDR", fontsize=18)   
+                          + filter_by_category + "in IDR", fontsize=18)
         plt.show()
     else:
         print("Plots are currently" +
