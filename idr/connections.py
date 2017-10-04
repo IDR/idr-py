@@ -58,7 +58,7 @@ def connection(host=None, user=None, password=None, port=None):
     user = _lookup_parameter(user, 'user', autocfg, 'omero')
     password = _lookup_parameter(password, 'password', autocfg, 'omero')
 
-    c = omero.client(host, port)
+    c = omero.client(host, int(port))
     c.enableKeepAlive(300)
     c.createSession(user, password)
     conn = BlitzGateway(client_obj=c)
