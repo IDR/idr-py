@@ -7,7 +7,8 @@ sudo: false
 before_install:
  - pip install -r test-requirements.txt
  - omego download python --ice 3.6 --sym OMERO.py
- - flake8 -v .
+ # OMERO.py is downloaded into the current directory, so only check idr
+ - flake8 -v idr/
  - rst-lint README.rst
 
 script:
