@@ -1,0 +1,11 @@
+# TODO:
+# - Consider version range for each dependency
+# - Transitive dependencies include jupyter-*, may want to version these too
+ipython
+ipywidgets
+matplotlib
+pandas
+requests
+seaborn
+scipy
+zeroc-ice>3.6,<3.7

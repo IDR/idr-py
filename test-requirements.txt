@@ -1,0 +1,7 @@
+-r ./requirements.txt
+flake8
+omego
+pep8-naming
+pycodestyle
+pytest
+restructuredtext_lint
