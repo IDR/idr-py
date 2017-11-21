@@ -10,9 +10,9 @@ Features:
 
 Features:
 
-- Cleanup library and add features [#3]((https://github.com/IDR/idr-py/pull/3)
+- Cleanup library and add features [#3](https://github.com/IDR/idr-py/pull/3)
 
 Infrastructure:
 
-- Cleanup setup.py [#2]((https://github.com/IDR/idr-py/pull/2)
-- Make idr-py pip installable [#1]((https://github.com/IDR/idr-py/pull/1)
+- Cleanup setup.py [#2](https://github.com/IDR/idr-py/pull/2)
+- Make idr-py pip installable [#1](https://github.com/IDR/idr-py/pull/1)
