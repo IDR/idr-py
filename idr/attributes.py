@@ -196,7 +196,8 @@ def get_phenotypes_for_gene(session,
 def get_phenotypes_for_genelist(session,
                                 go_gene_list,
                                 organism,
-                                idr_base_url="https://idr.openmicroscopy.org"):
+                                idr_base_url="https://idr.openmicroscopy.org",
+                                entrez_flag=True):
 
     """
     Return a list of phenotypes (dataframe)
@@ -215,8 +216,10 @@ def get_phenotypes_for_genelist(session,
         if gene.startswith("-"):
             continue
 
-        # entrezid = get_entrezid(gene)
-        entrezid = '-'
+        if entrez_flag == True:
+            entrezid = get_entrezid(gene)
+        else:
+            entrezid = '-'
         ensembleid = get_ensembleid(gene)
 
         gid = None
@@ -240,13 +243,14 @@ def get_phenotypes_for_genelist(session,
 
         # search with entrezid if gene symbol and
         # ensembleid does not return any result
-        # if len(uniquelist) == 0:
-        #     key = "EntrezID"
-        #     for gid in entrezid:
-        #         uniquelist = get_phenotypes_for_gene(session,
-        #                                              gid)
-        #         if len(uniquelist['Name']) != 0:
-        #             break
+        if entrez_flag == True:
+            if len(uniquelist) == 0:
+                key = "EntrezID"
+                for gid in entrezid:
+                    uniquelist = get_phenotypes_for_gene(session,
+                                                         gid)
+                    if len(uniquelist['Name']) != 0:
+                        break
 
         # List of genes from string which were part of IDR
         if gid is not None:
