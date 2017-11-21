@@ -10,7 +10,7 @@ Features:
 
 Features:
 
-- Cleanup library and add features ()#3)
+- Cleanup library and add features (#3)
 
 Infrastructure:
 
