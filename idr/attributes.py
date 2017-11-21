@@ -5,7 +5,7 @@ import pandas
 import omero.clients # NOQA
 from omero.rtypes import rlist, rstring, unwrap
 from omero.sys import ParametersI
-from externalDBs import get_ensembleid, ensembleid_to_genesymbol
+from externalDBs import get_entrezid, get_ensembleid, ensembleid_to_genesymbol
 
 from widgets import progress
 import numpy as np
