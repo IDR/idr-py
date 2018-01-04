@@ -14,7 +14,7 @@ def genes_of_interest_from_string(gene_names,
                                   no_of_interacting_partners, taxonomyid):
     url = 'https://string-db.org/api/psi-mi-tab/interactionsList?identifiers='
     for g in gene_names:
-        url = url + g + '%250D'
+        url = url + g + '%0d'
     url = (url + '&limit=' + str(no_of_interacting_partners) +
            '&network_flavor=evidence&species=' + taxonomyid)
     res = requests.get(url)
