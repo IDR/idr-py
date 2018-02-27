@@ -1,7 +1,6 @@
 """
 Helper functions for accessing the IDR from within IPython notebooks.
 """
-import random
 import requests
 import os
 import sys
@@ -17,17 +16,13 @@ def _configuration_from_url(config_url):
     """
     r = requests.get(config_url)
     r.raise_for_status()
-    cfgs = r.json()
-    cfg = random.choice(cfgs)
+    cfg = r.json()
     return cfg
 
 
-def _lookup_parameter(initial, paramname, autocfg, default):
+def _lookup_parameter(initial, paramname, default):
     if initial is not None:
         return initial
-    v = autocfg.get(paramname)
-    if v is not None:
-        return v
     v = os.getenv('IDR_' + paramname.upper())
     if v is not None:
         return v
@@ -38,14 +33,16 @@ def connection(host=None, user=None, password=None, port=None):
     """
     Connect to the IDR analysis OMERO server
     Lookup of connection parameters is done in this order:
-    1. Parameters passed as arguments to this method
-    2. Parameters obtained from IDR_OMERO_CONFIGURATION_URL
+    1. Parameters obtained from IDR_OMERO_CONFIGURATION_URL
+    2. Parameters passed as arguments to this method
     3. Parameters obtained from IDR_{HOST,PORT,USER,PASSWORD}
-    4. Built-in defaults
+
+    There are no defaults to prevent settings in
+    IDR_OMERO_CONFIGURATION_URL from being overridden
 
     :return: A BlitzGateway object
     """
-    autocfg = {}
+    autocfg = []
     config_url = os.getenv('IDR_OMERO_CONFIGURATION_URL')
     if config_url:
         try:
@@ -53,12 +50,19 @@ def connection(host=None, user=None, password=None, port=None):
         except Exception as e:
             print >> sys.stderr, 'Failed to fetch configuration: %r' % e
 
-    host = _lookup_parameter(host, 'host', autocfg, 'localhost')
-    port = _lookup_parameter(port, 'port', autocfg, 4064)
-    user = _lookup_parameter(user, 'user', autocfg, 'omero')
-    password = _lookup_parameter(password, 'password', autocfg, 'omero')
+    host = _lookup_parameter(host, 'host', None)
+    port = _lookup_parameter(port, 'port', None)
+    user = _lookup_parameter(user, 'user', None)
+    password = _lookup_parameter(password, 'password', None)
 
-    c = omero.client(host, int(port))
+    # https://github.com/openmicroscopy/openmicroscopy/blob/v5.4.3/components/tools/OmeroPy/src/omero/clients.py#L50
+    kwargs = {'args': autocfg}
+    if host is not None:
+        kwargs['host'] = host
+    if port is not None:
+        kwargs['port'] = port
+
+    c = omero.client(**kwargs)
     c.enableKeepAlive(300)
     c.createSession(user, password)
     conn = BlitzGateway(client_obj=c)
