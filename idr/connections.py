@@ -34,7 +34,7 @@ def _lookup_parameter(initial, paramname, default):
     return default
 
 
-def connection(host=None, user=None, password=None, port=None):
+def connection(host=None, user=None, password=None, port=None, verbose=1):
     """
     Connect to the IDR analysis OMERO server
     Lookup of connection parameters is done in this order:
@@ -75,7 +75,13 @@ def connection(host=None, user=None, password=None, port=None):
     c.createSession(user, password)
     conn = BlitzGateway(client_obj=c)
 
-    print "Connected to IDR..."
+    if verbose > 0:
+        server = ''
+        if verbose > 1:
+            info = conn.c.sf.ice_getConnection().getInfo()
+            server = '[{}:{}]'.format(info.remoteAddress, info.remotePort)
+
+        print("Connected to IDR%s ..." % server)
     return conn
 
 
