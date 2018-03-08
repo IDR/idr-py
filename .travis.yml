@@ -16,3 +16,4 @@ script:
  - PYTHONPATH=OMERO.py/lib/python python -c 'import idr'
  # TODO: Set IDR_USER IDR_HOST IDR_PASSWORD and run tests
  #- PYTHONPATH=OMERO.py/lib/python py.test idr/tests/
+ - ./travis-conda-test.sh
