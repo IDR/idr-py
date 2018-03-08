@@ -15,6 +15,17 @@ Requirements
  * OMERO.py 5.3.x
  * Python 2.6+
 
+Installing with conda
+=====================
+
+This requires `Anaconda/Miniconda with Python 2.7 <https://conda.io/docs/user-guide/install/download.html>`_.
+
+::
+
+    conda env create -f environment-idr-omero53.yml -n idr-omero53
+    conda activate idr-omero53
+
+
 Installing from PyPI
 ====================
 
