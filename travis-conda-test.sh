@@ -11,8 +11,8 @@ conda update -q conda
 conda info -a
 
 # Only install dependencies, not idr-py
-sed -n '/pip/q;p' environment-idr-omero53.yml > environment-idr-omero53-deps.yml
-conda env create -f environment-idr-omero53-deps.yml -n testenv
+sed -n '/pip/q;p' environment.yml > environment-deps.yml
+conda env create -f environment-deps.yml -n testenv
 source activate testenv
 python setup.py install
 # Disable default matplotlib backend
