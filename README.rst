@@ -22,7 +22,7 @@ This requires `Anaconda/Miniconda with Python 2.7 <https://conda.io/docs/user-gu
 
 ::
 
-    conda env create -f environment-idr-omero53.yml -n idr-omero53
+    conda env create -f environment.yml -n idr-omero53
     conda activate idr-omero53
 
 

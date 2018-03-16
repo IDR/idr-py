@@ -1,5 +1,4 @@
-# conda env create -f environment-idr-omero53.yml
-name: idr-omero53
+# conda env create -f environment.yml -n idr-omero53
 channels:
   - bioconda
   - defaults
