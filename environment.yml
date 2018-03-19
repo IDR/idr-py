@@ -1,0 +1,15 @@
+# conda env create -f environment.yml -n idr-omero53
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - python-omero=5.3.3
+  - zeroc-ice=3.6.3
+  - ipython
+  - ipywidgets
+  - matplotlib
+  - pandas
+  - requests
+  - seaborn
+  - pip:
+    - idr-py
