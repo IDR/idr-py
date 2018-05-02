@@ -85,12 +85,10 @@ def get_ensembleid(gene):
 
 def genes_of_interest_go(go_term, taxonomy_id):
 
-    url = ('https://www.ebi.ac.uk/QuickGO/services/annotation/downloadSearch?taxonId=' +
-           taxonomy_id +
-           '&goId=%20' +
-           go_term +
+    go = "https://www.ebi.ac.uk/QuickGO/services/annotation/downloadSearch"
+    url = (go + '?taxonId=' + taxonomy_id + '&goId=%20' + go_term +
            '%20&format=tsv')
-    res = requests.get(url, headers={ "Accept" : "text/tsv"})
+    res = requests.get(url, headers={"Accept": "text/tsv"})
     df = read_csv(StringIO(res.text), sep='\t', header=None)
     c1 = df.iloc[:, 2]
     return list(set(np.unique(c1.values.ravel())) - set(['Symbol', '-']))
