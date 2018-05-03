@@ -2,6 +2,6 @@
 flake8
 omego
 pep8-naming
-pycodestyle
+pycodestyle<2.4.0
 pytest
 restructuredtext_lint
