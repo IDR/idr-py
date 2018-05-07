@@ -1,3 +1,10 @@
+0.3.0 (2018-05-10)
+------------------
+
+Features:
+
+- Bump OMERO version to 5.4 [#12](https://github.com/IDR/idr-py/pull/12)
+
 0.2.1 (2018-05-03)
 ------------------
 
