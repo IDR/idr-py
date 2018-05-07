@@ -25,7 +25,7 @@ import os
 from setuptools import setup, find_packages
 
 
-version = "0.2.2.dev1"
+version = "0.3.0"
 
 
 # Utility function to read the README file.
