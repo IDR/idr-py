@@ -1,10 +1,10 @@
-# conda env create -f environment.yml -n idr-omero54
+# conda env create -f environment.yml -n idr-omero
 channels:
-  - bioconda
+  - ome
   - defaults
 dependencies:
-  - python-omero>=5.4,<5.5
-  - zeroc-ice=3.6.3
+  # TODO: Replace omero-py withidr-py when it's added
+  - omero-py>=5.6dev4
   - ipython
   - ipywidgets
   - matplotlib

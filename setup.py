@@ -44,12 +44,11 @@ setup(name="idr-py",
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Environment :: Web Environment',
-          'Framework :: Django',
           'Intended Audience :: Developers',
           'Intended Audience :: Science/Research',
           'Natural Language :: English',
           'Operating System :: OS Independent',
-          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 3',
           'Topic :: Software Development :: Libraries :: '
           'Python Modules'
       ],  # Get strings from
@@ -58,6 +57,7 @@ setup(name="idr-py",
       author_email='ome-devel@lists.openmicroscopy.org.uk',
       # https://spdx.org/licenses
       license='GPL-2.0+',
+      python_requires='>=3',
       url="https://github.com/IDR/idr-py",
       download_url='https://github.com/IDR/idr-py/archive/v%s.tar.gz' % version,  # NOQA
       keywords=['Python', 'plugin'],
