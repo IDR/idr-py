@@ -59,7 +59,7 @@ def plot_idr_attributes(primary_dictionary,
                     if value1 > v:
                         v = value1
             if key in list(query_list):
-                print ('in query list')
+                print('in query list')
                 continue
             dict1[key] = v
         letter_counts = dict1
@@ -83,9 +83,9 @@ def plot_idr_attributes(primary_dictionary,
                           + filter_by_category + "in IDR", fontsize=18)
         plt.show()
     else:
-        print(("Plots are currently" +
+        print("Plots are currently" +
               "shown in the notebooks alone"
-              " and not from the terminal"))
+              " and not from the terminal")
 
     return screenids_removed, phenotypes_removed, genes_of_interest
 
@@ -135,7 +135,7 @@ def plot_string_interactions(primary_list,
             plt.setp(g.ax_heatmap.yaxis.get_majorticklabels(), rotation=0)
             plt.show()
     else:
-        print(("Plots are currently" +
+        print("Plots are currently" +
               "shown in the notebooks alone"
-              " and not from the terminal"))
+              " and not from the terminal")
     return df

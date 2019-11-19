@@ -47,6 +47,5 @@ class TestExternalDBs():
 
         gene_symbol = ensembleid_to_genesymbol(ensemble_id)
 
-        assert (isinstance(gene_symbol, str)
-                or isinstance(gene_symbol, str))
+        assert isinstance(gene_symbol, str)
         assert (gene_symbol is not None)
