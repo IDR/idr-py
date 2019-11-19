@@ -57,7 +57,7 @@ def get_entrezid(gene):
     if results.empty:
         return entrezid
 
-    for i in results.ix[:, 0]:
+    for i in results.hits:
         key = list(i.keys())
         value = list(i.values())
         for cntr, k in enumerate(key):
