@@ -395,7 +395,9 @@ def get_organism_screenids(session, organism,
     qs = {'base': idr_base_url, 'key': 'organism', 'value': organism}
     screens_projects_url = "{base}/mapr/api/{key}/?value={value}"
     url = screens_projects_url.format(**qs)
-    for s in session.get(url).json()['screens']:
+    sr = session.get(url)
+    sr.raise_for_status()
+    for s in sr.json()['screens']:
         screen_id_list.append(str(s['id']))
 
     return screen_id_list
