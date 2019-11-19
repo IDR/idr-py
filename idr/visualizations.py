@@ -3,7 +3,7 @@ from collections import OrderedDict
 import matplotlib.pyplot as plt
 import pandas
 import seaborn as sns
-from externalDBs import ensembleid_to_genesymbol
+from .externalDBs import ensembleid_to_genesymbol
 
 
 def plot_idr_attributes(primary_dictionary,
@@ -22,7 +22,7 @@ def plot_idr_attributes(primary_dictionary,
         phenolist = []
         screens_list = []
         query_list = []
-        for phenoid in primary_dictionary[screenid].keys():
+        for phenoid in list(primary_dictionary[screenid].keys()):
             phenolist = primary_dictionary[screenid][phenoid]
             phenolist1 = secondary_dictionary[screenid][phenoid]
             if filter_by_category == 'Phenotypes':
@@ -40,7 +40,7 @@ def plot_idr_attributes(primary_dictionary,
             screenids_removed.append(screenid)
     letter_counts = Counter(gene_counts)
     keystoremove = []
-    for key, value in letter_counts.viewitems():
+    for key, value in letter_counts.items():
         if value < threshold_for_plot:
             keystoremove.append(key)
     for keys in keystoremove:
@@ -50,7 +50,7 @@ def plot_idr_attributes(primary_dictionary,
 
     if primary_dictionary != secondary_dictionary:
         dict1 = OrderedDict()
-        for k, v in letter_counts.iteritems():
+        for k, v in letter_counts.items():
             key = k
             if k.startswith('ENSG'):
                 key = ensembleid_to_genesymbol(k)
@@ -83,9 +83,9 @@ def plot_idr_attributes(primary_dictionary,
                           + filter_by_category + "in IDR", fontsize=18)
         plt.show()
     else:
-        print("Plots are currently" +
+        print(("Plots are currently" +
               "shown in the notebooks alone"
-              " and not from the terminal")
+              " and not from the terminal"))
 
     return screenids_removed, phenotypes_removed, genes_of_interest
 
@@ -135,7 +135,7 @@ def plot_string_interactions(primary_list,
             plt.setp(g.ax_heatmap.yaxis.get_majorticklabels(), rotation=0)
             plt.show()
     else:
-        print("Plots are currently" +
+        print(("Plots are currently" +
               "shown in the notebooks alone"
-              " and not from the terminal")
+              " and not from the terminal"))
     return df

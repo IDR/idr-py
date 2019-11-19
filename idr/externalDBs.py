@@ -58,8 +58,8 @@ def get_entrezid(gene):
         return entrezid
 
     for i in results.ix[:, 0]:
-        key = i.keys()
-        value = i.values()
+        key = list(i.keys())
+        value = list(i.values())
         for cntr, k in enumerate(key):
             if k == 'entrezgene':
                 entrezid.append(value[cntr])

@@ -5,9 +5,9 @@ import pandas
 import omero.clients # NOQA
 from omero.rtypes import rlist, rstring, unwrap
 from omero.sys import ParametersI
-from externalDBs import get_entrezid, get_ensembleid, ensembleid_to_genesymbol
+from .externalDBs import get_entrezid, get_ensembleid, ensembleid_to_genesymbol
 
-from widgets import progress
+from .widgets import progress
 import numpy as np
 
 
@@ -42,7 +42,7 @@ def attributes_by_attributes(conn,
         conn.getQueryService().projection(q, params))]
 
     params = ParametersI()
-    valuelist = [rstring(unicode(v)) for v in values]
+    valuelist = [rstring(str(v)) for v in values]
     params.add('values', rlist(valuelist))
     params.addString("ns", ns)
     params.addString("ns2", ns2)

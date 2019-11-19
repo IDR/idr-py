@@ -81,7 +81,7 @@ def connection(host=None, user=None, password=None, port=None, verbose=1):
             info = conn.c.sf.ice_getConnection().getInfo()
             server = '[{}:{}]'.format(info.remoteAddress, info.remotePort)
 
-        print("Connected to IDR%s ..." % server)
+        print(("Connected to IDR%s ..." % server))
     return conn
 
 

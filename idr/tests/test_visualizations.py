@@ -5,7 +5,7 @@ from idr import get_phenotypes_for_genelist
 from idr import get_similar_genes
 from idr import plot_idr_attributes, plot_string_interactions
 
-from config import go_gene_list, taxonomy_id, organism
+from .config import go_gene_list, taxonomy_id, organism
 
 
 class TestVisualizations():

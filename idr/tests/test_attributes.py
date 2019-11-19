@@ -6,7 +6,7 @@ from idr import get_organism_screenids
 from idr import create_http_session, connection
 from idr import images_by_phenotype
 
-from config import organism
+from .config import organism
 
 
 class TestAttributes():
@@ -48,7 +48,7 @@ class TestAttributes():
         assert isinstance(query_genes_df, pd.DataFrame)
         assert isinstance(screen_to_phenotype_dict, dict)
         assert not query_genes_df.empty
-        print screen_to_phenotype_dict
+        print(screen_to_phenotype_dict)
         assert not bool(screen_to_phenotype_dict)
 
         [similar_genes,

@@ -3,7 +3,7 @@ Helper functions for accessing the IDR from within IPython notebooks.
 """
 from scipy.stats import pearsonr
 import matplotlib.pyplot as plt
-from attributes import annotation_ids_by_field
+from .attributes import annotation_ids_by_field
 
 
 def images_by_phenotype(conn, phenotype="CMPO_0000077"):
