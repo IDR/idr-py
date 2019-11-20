@@ -1,3 +1,11 @@
+0.4.0 (in progress)
+-------------------
+
+Features:
+
+- Switch to Python 3, Python 2 is no longer supported [#16](https://github.com/IDR/idr-py/pull/16)
+- OMERO.py 5.6
+
 0.3.0 (2018-05-07)
 ------------------
 
