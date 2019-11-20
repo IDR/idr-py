@@ -36,6 +36,12 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
+def get_requirements(filename='requirements.txt'):
+    with open(filename) as f:
+        rv = f.read().splitlines()
+    return rv
+
+
 setup(name="idr-py",
       packages=find_packages(exclude=['ez_setup']),
       version=version,
@@ -57,6 +63,7 @@ setup(name="idr-py",
       author_email='ome-devel@lists.openmicroscopy.org.uk',
       # https://spdx.org/licenses
       license='GPL-2.0+',
+      install_requires=get_requirements(),
       python_requires='>=3',
       url="https://github.com/IDR/idr-py",
       download_url='https://github.com/IDR/idr-py/archive/v%s.tar.gz' % version,  # NOQA
