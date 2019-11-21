@@ -15,3 +15,10 @@ script:
  # TODO: Set IDR_USER IDR_HOST IDR_PASSWORD and run tests
  #- pytest
  - ./travis-conda-test.sh
+
+deploy:
+  provider: pypi
+  user: $PYPI_USER
+  password: $PYPI_PASSWORD
+  on:
+    tags: true
