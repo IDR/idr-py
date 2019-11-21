@@ -15,7 +15,7 @@ def _configuration_from_url(config_url):
     so it has to be done client-side by connecting to a random server/port
     """
     try:
-        host = re.match('\w+://([^:/]+)', config_url).group(1)
+        host = re.match(r'\w+://([^:/]+)', config_url).group(1)
     except AttributeError:
         host = config_url
         config_url = 'https://%s/connection/omero-client.json' % host
@@ -60,7 +60,7 @@ def connection(host=None, user=None, password=None, port=None, verbose=1):
     password = _lookup_parameter(password, 'password', None)
 
     autocfg = []
-    if (host and not port) or re.match('\w+://', host):
+    if (host and not port) or re.match(r'\w+://', host):
         autocfg, host = _configuration_from_url(host)
 
     # https://github.com/openmicroscopy/openmicroscopy/blob/v5.4.3/components/tools/OmeroPy/src/omero/clients.py#L50

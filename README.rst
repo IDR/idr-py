@@ -12,18 +12,18 @@ Library with helper methods for accessing the Image Data Resource (IDR).
 Requirements
 ============
 
- * OMERO.py 5.4.x
- * Python 2.6+
+ * OMERO.py 5.6.x
+ * Python 3.6+
 
 Installing with conda
 =====================
 
-This requires `Anaconda/Miniconda with Python 2.7 <https://conda.io/docs/user-guide/install/download.html>`_.
+This requires `Anaconda/Miniconda with Python 3.6 <https://conda.io/docs/user-guide/install/download.html>`_.
 
 ::
 
-    conda env create -f environment.yml -n idr-omero54
-    conda activate idr-omero54
+    conda env create -f environment.yml -n idr-omero
+    conda activate idr-omero
 
 
 Installing from PyPI

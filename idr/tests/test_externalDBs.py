@@ -7,7 +7,7 @@ from idr import genes_of_interest_go
 from idr import ensembleid_to_genesymbol
 from IPython.display import Image
 
-from config import gene_symbol, taxonomy_id, ensemble_id
+from .config import gene_symbol, taxonomy_id, ensemble_id
 
 
 class TestExternalDBs():
@@ -47,6 +47,5 @@ class TestExternalDBs():
 
         gene_symbol = ensembleid_to_genesymbol(ensemble_id)
 
-        assert (isinstance(gene_symbol, str)
-                or isinstance(gene_symbol, unicode))
+        assert isinstance(gene_symbol, str)
         assert (gene_symbol is not None)

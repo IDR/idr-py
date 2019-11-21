@@ -1,3 +1,4 @@
+import pytest
 import pandas as pd
 from idr import get_phenotypes_for_genelist
 from idr import get_phenotypes_for_gene
@@ -6,7 +7,7 @@ from idr import get_organism_screenids
 from idr import create_http_session, connection
 from idr import images_by_phenotype
 
-from config import organism
+from .config import organism
 
 
 class TestAttributes():
@@ -21,21 +22,24 @@ class TestAttributes():
         images = images_by_phenotype(self.conn)
         assert (isinstance(images, list) is True)
 
-    def test_get_organism_screenids(self):
-
-        organisms = ['Homo sapiens',
-                     'Saccharomyces cerevisiae',
-                     'Schizosaccharomyces pombe',
-                     'Drosophila melanogaster',
-                     'Mus musculus',
-                     'Arabidopsis thaliana']
-        for idx, organism1 in enumerate(organisms):
-            organism_screen_idlist = get_organism_screenids(self.session,
-                                                            organism1)
-            if idx < 4:
-                assert (organism_screen_idlist != [])
-            else:
-                assert (organism_screen_idlist == [])
+    @pytest.mark.parametrize(
+        'organism,empty', [
+            pytest.param(
+                'Homo sapiens', False,
+                marks=pytest.mark.xfail(reason="may timeout")),
+            ('Saccharomyces cerevisiae', False),
+            ('Schizosaccharomyces pombe', False),
+            ('Drosophila melanogaster', False),
+            ('Mus musculus', True),
+            ('Arabidopsis thaliana', True),
+        ])
+    def test_get_organism_screenids(self, organism, empty):
+        organism_screen_idlist = get_organism_screenids(
+            self.session, organism)
+        if empty:
+            assert (organism_screen_idlist == [])
+        else:
+            assert (organism_screen_idlist != [])
 
     def test_get_phenotypes_for_genelist(self):
 
@@ -48,7 +52,7 @@ class TestAttributes():
         assert isinstance(query_genes_df, pd.DataFrame)
         assert isinstance(screen_to_phenotype_dict, dict)
         assert not query_genes_df.empty
-        print screen_to_phenotype_dict
+        print(screen_to_phenotype_dict)
         assert not bool(screen_to_phenotype_dict)
 
         [similar_genes,

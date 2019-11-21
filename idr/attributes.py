@@ -5,9 +5,9 @@ import pandas
 import omero.clients # NOQA
 from omero.rtypes import rlist, rstring, unwrap
 from omero.sys import ParametersI
-from externalDBs import get_entrezid, get_ensembleid, ensembleid_to_genesymbol
+from .externalDBs import get_entrezid, get_ensembleid, ensembleid_to_genesymbol
 
-from widgets import progress
+from .widgets import progress
 import numpy as np
 
 
@@ -42,7 +42,7 @@ def attributes_by_attributes(conn,
         conn.getQueryService().projection(q, params))]
 
     params = ParametersI()
-    valuelist = [rstring(unicode(v)) for v in values]
+    valuelist = [rstring(str(v)) for v in values]
     params.add('values', rlist(valuelist))
     params.addString("ns", ns)
     params.addString("ns2", ns2)
@@ -395,7 +395,9 @@ def get_organism_screenids(session, organism,
     qs = {'base': idr_base_url, 'key': 'organism', 'value': organism}
     screens_projects_url = "{base}/mapr/api/{key}/?value={value}"
     url = screens_projects_url.format(**qs)
-    for s in session.get(url).json()['screens']:
+    sr = session.get(url)
+    sr.raise_for_status()
+    for s in sr.json()['screens']:
         screen_id_list.append(str(s['id']))
 
     return screen_id_list

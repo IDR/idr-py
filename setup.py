@@ -25,7 +25,7 @@ import os
 from setuptools import setup, find_packages
 
 
-version = "0.3.0"
+version = "0.4.0.dev1"
 
 
 # Utility function to read the README file.
@@ -36,6 +36,12 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
+def get_requirements(filename='requirements.txt'):
+    with open(filename) as f:
+        rv = f.read().splitlines()
+    return rv
+
+
 setup(name="idr-py",
       packages=find_packages(exclude=['ez_setup']),
       version=version,
@@ -44,12 +50,11 @@ setup(name="idr-py",
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Environment :: Web Environment',
-          'Framework :: Django',
           'Intended Audience :: Developers',
           'Intended Audience :: Science/Research',
           'Natural Language :: English',
           'Operating System :: OS Independent',
-          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 3',
           'Topic :: Software Development :: Libraries :: '
           'Python Modules'
       ],  # Get strings from
@@ -58,6 +63,8 @@ setup(name="idr-py",
       author_email='ome-devel@lists.openmicroscopy.org.uk',
       # https://spdx.org/licenses
       license='GPL-2.0+',
+      install_requires=get_requirements(),
+      python_requires='>=3',
       url="https://github.com/IDR/idr-py",
       download_url='https://github.com/IDR/idr-py/archive/v%s.tar.gz' % version,  # NOQA
       keywords=['Python', 'plugin'],
