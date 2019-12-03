@@ -1,3 +1,10 @@
+0.4.0.dev3 (2019-12-03)
+-----------------------
+
+Features:
+
+- Add requirements.txt to MANIFEST [#19](https://github.com/IDR/idr-py/pull/19)
+
 0.4.0.dev2 (2019-11-22)
 -----------------------
 
