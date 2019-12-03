@@ -79,9 +79,18 @@ def connection(host=None, user=None, password=None, port=None, verbose=1):
         kwargs['port'] = port
 
     c = omero.client(**kwargs)
-    c.enableKeepAlive(300)
+
+    # If omero.user and omero.pass were included in omero-client.json
+    # they can optionally be omitted in createSession
+    create_session_args = []
+    if user:
+        create_session_args.append(user)
+        if password:
+            create_session_args.append(password)
+
     try:
-        c.createSession(user, password)
+        c.createSession(*create_session_args)
+        c.enableKeepAlive(300)
         conn = BlitzGateway(client_obj=c)
     except omero.ClientError as e:
         if re.match(r'\w+://', host):
