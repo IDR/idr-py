@@ -57,6 +57,10 @@ def connection(host=None, user=None, password=None, port=None, verbose=1):
        host to the host portion of the URL in case it needs to be
        substituted into the fetched configuration
 
+    To support firewalled environments if host/IDR_HOST has no protocol and the
+    connection fails automatically attempt to reconnect using websockets (wss)
+    on port 443.
+
     No defaults are provided
 
     :return: A BlitzGateway object
