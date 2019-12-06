@@ -12,8 +12,7 @@ before_install:
 script:
  - python setup.py sdist install || exit 1
  - python -c 'import idr'
- # TODO: Set IDR_USER IDR_HOST IDR_PASSWORD and run tests
- #- pytest
+ - IDR_HOST=idr.openmicroscopy.org IDR_USER=public IDR_PASSWORD=public pytest
  - ./travis-conda-test.sh
 
 deploy:
