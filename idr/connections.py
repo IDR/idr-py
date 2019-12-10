@@ -47,7 +47,7 @@ def connection(host=None, user=None, password=None, port=None, verbose=1):
     1. If host/IDR_HOST starts with protocol:// and protocol is not an Ice
        transport treat this as a full omero-client.json configuration URL and
        fetch it
-    2. If host/IDR_HOST starts with an ice transport:// connect directly
+    2. If host/IDR_HOST starts with an Ice transport:// connect directly
     3. If host/IDR_HOST is defined but port/IDR_PORT empty and there is no
        protocol then attempt to fetch configuration from
        https://host/connection/omero-client.json
