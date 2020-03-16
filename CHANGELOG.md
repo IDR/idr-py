@@ -1,3 +1,10 @@
+0.4.0 (2020-03-17)
+------------------
+
+Features:
+
+- Add support for websockets [#20](https://github.com/IDR/idr-py/pull/20)
+
 0.4.0.dev3 (2019-12-03)
 -----------------------
 
