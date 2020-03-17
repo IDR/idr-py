@@ -78,7 +78,6 @@ def get_ensembleid(gene):
     if results.empty:
         return ensembleid
 
-    print(res.text)
     for i in results.iloc[:, 0]:
         ensembleid.append(i)
     return ensembleid
