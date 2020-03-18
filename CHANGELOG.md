@@ -1,15 +1,10 @@
-0.4.0.dev3 (2019-12-03)
------------------------
+0.4.0 (2020-03-18)
+------------------
 
 Features:
 
+- Add support for websockets [#20](https://github.com/IDR/idr-py/pull/20)
 - Add requirements.txt to MANIFEST [#19](https://github.com/IDR/idr-py/pull/19)
-
-0.4.0.dev2 (2019-11-22)
------------------------
-
-Features:
-
 - Switch to Python 3, Python 2 is no longer supported [#16](https://github.com/IDR/idr-py/pull/16)
 - OMERO.py 5.6
 

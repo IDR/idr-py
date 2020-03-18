@@ -1,15 +1,7 @@
 # conda env create -f environment.yml -n idr-omero
 channels:
+  - idr
   - ome
   - defaults
 dependencies:
-  # TODO: Replace omero-py withidr-py when it's added
-  - omero-py>=5.6dev4
-  - ipython
-  - ipywidgets
-  - matplotlib
-  - pandas
-  - requests
-  - seaborn
-  - pip:
-    - idr-py
+  - idr-py
