@@ -11,7 +11,7 @@ from IPython.display import Image
 
 
 def genes_of_interest_from_string(gene_names, no_of_interacting_partners, taxonomyid):
-    url = "https://string-db.org/api/psi-mi-tab/interactionsList?identifiers="
+    url = "https://string-db.org/api/psi-mi-tab/interaction_partners?identifiers="
     for g in gene_names:
         url = url + g + "%0d"
     url = (
