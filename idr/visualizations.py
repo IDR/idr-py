@@ -103,7 +103,7 @@ def plot_string_interactions(
         new_list.append("string:%s" % g)
 
     for gene in primary_list:
-        v = "string:%s" % gene 
+        v = "string:%s" % gene
         c2 = total_interactions_dataframe.loc[total_interactions_dataframe[2] == v]
         c3 = total_interactions_dataframe.loc[total_interactions_dataframe[3] == v]
         c4 = pandas.concat([c2, c3])

@@ -22,7 +22,7 @@ def genes_of_interest_from_string(gene_names, no_of_interacting_partners, taxono
         + taxonomyid
     )
     res = requests.get(url)
-    pandas.set_option('display.max_columns', 500)
+    pandas.set_option("display.max_columns", 500)
     df = read_csv(StringIO(res.text), sep="\t", header=None)
     c1 = df.loc[:, [2, 3, 14]]
     return c1
