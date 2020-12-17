@@ -30,7 +30,7 @@ class TestAttributes:
             ("Saccharomyces cerevisiae", False),
             ("Schizosaccharomyces pombe", False),
             ("Drosophila melanogaster", False),
-            ("Mus musculus", True),
+            ("Mus musculus", False),
             ("Arabidopsis thaliana", True),
         ],
     )
