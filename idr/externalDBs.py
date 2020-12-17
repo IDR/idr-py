@@ -76,7 +76,7 @@ def get_ensembleid(gene):
     ensembleserver = "https://rest.ensembl.org/xrefs/symbol/homo_sapiens/"
     url = ensembleserver + gene + "?content-type=application/json"
 
-    res = requests.get(url)
+    res = requests.get(url, verify=False)
     results = pandas.read_json(StringIO(res.text))
 
     ensembleid = []
@@ -106,7 +106,7 @@ def ensembleid_to_genesymbol(ensembleid):
         + ensembleid
         + "?content-type=application/json;external_db=WikiGene"
     )
-    res = requests.get(url)
+    res = requests.get(url, verify=False)
     if not res.ok:
         return ensembleid
     if "error" in res.text:
