@@ -10,26 +10,30 @@ import numpy as np
 from IPython.display import Image
 
 
-def genes_of_interest_from_string(gene_names,
-                                  no_of_interacting_partners, taxonomyid):
-    url = 'https://string-db.org/api/psi-mi-tab/interactionsList?identifiers='
+def genes_of_interest_from_string(gene_names, no_of_interacting_partners, taxonomyid):
+    url = "https://string-db.org/api/psi-mi-tab/interactionsList?identifiers="
     for g in gene_names:
-        url = url + g + '%0d'
-    url = (url + '&limit=' + str(no_of_interacting_partners) +
-           '&network_flavor=evidence&species=' + taxonomyid)
+        url = url + g + "%0d"
+    url = (
+        url
+        + "&limit="
+        + str(no_of_interacting_partners)
+        + "&network_flavor=evidence&species="
+        + taxonomyid
+    )
     res = requests.get(url)
-    df = read_csv(StringIO(res.text), sep='\t', header=None)
+    df = read_csv(StringIO(res.text), sep="\t", header=None)
     c1 = df.loc[:, [2, 3, 14]]
     return c1
 
 
 def network_of_interest(gene_names, no_of_interacting_partners):
-    url = 'https://string-db.org/api/image/network?identifier='
-    limit = str(no_of_interacting_partners) + '&network_flavor=evidence'
+    url = "https://string-db.org/api/image/network?identifier="
+    limit = str(no_of_interacting_partners) + "&network_flavor=evidence"
     for g in gene_names:
         url = url + g  # This doesn't look like it will work
 
-    url = url + '&limit=' + limit
+    url = url + "&limit=" + limit
     return Image(url=url)
 
 
@@ -45,7 +49,7 @@ def get_entrezid(gene):
     http://mygene.info/v3/api/#MyGene.info-gene-query-service-GET-Gene-query-service
     """
     entrezurl = "https://mygene.info/v3/query?q="
-    entrezurl = entrezurl+gene
+    entrezurl = entrezurl + gene
 
     res = requests.get(entrezurl)
     if not res.ok:
@@ -61,7 +65,7 @@ def get_entrezid(gene):
         key = list(i.keys())
         value = list(i.values())
         for cntr, k in enumerate(key):
-            if k == 'entrezgene':
+            if k == "entrezgene":
                 entrezid.append(value[cntr])
                 return entrezid
 
@@ -86,19 +90,21 @@ def get_ensembleid(gene):
 def genes_of_interest_go(go_term, taxonomy_id):
 
     go = "https://www.ebi.ac.uk/QuickGO/services/annotation/downloadSearch"
-    url = (go + '?taxonId=' + taxonomy_id + '&goId=%20' + go_term +
-           '%20&format=tsv')
+    url = go + "?taxonId=" + taxonomy_id + "&goId=%20" + go_term + "%20&format=tsv"
     res = requests.get(url, headers={"Accept": "text/tsv"})
-    df = read_csv(StringIO(res.text), sep='\t', header=None)
+    df = read_csv(StringIO(res.text), sep="\t", header=None)
     c1 = df.iloc[:, 2]
-    return list(set(np.unique(c1.values.ravel())) - set(['Symbol', '-']))
+    return list(set(np.unique(c1.values.ravel())) - set(["Symbol", "-"]))
 
 
 def ensembleid_to_genesymbol(ensembleid):
 
     ensembleserver = "https://rest.ensembl.org/xrefs/id/"
-    url = (ensembleserver + ensembleid +
-           "?content-type=application/json;external_db=WikiGene")
+    url = (
+        ensembleserver
+        + ensembleid
+        + "?content-type=application/json;external_db=WikiGene"
+    )
     res = requests.get(url)
     if not res.ok:
         return ensembleid
@@ -107,5 +113,5 @@ def ensembleid_to_genesymbol(ensembleid):
     results = pandas.read_json(StringIO(res.text))
     if results.empty:
         return ensembleid
-    symbol = results['display_id'][0]
+    symbol = results["display_id"][0]
     return symbol

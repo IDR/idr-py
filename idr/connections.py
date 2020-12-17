@@ -16,10 +16,10 @@ def _configuration_from_url(config_url):
     so it has to be done client-side by connecting to a random server/port
     """
     try:
-        host = re.match(r'\w+://([^:/]+)', config_url).group(1)
+        host = re.match(r"\w+://([^:/]+)", config_url).group(1)
     except AttributeError:
         host = config_url
-        config_url = 'https://%s/connection/omero-client.json' % host
+        config_url = "https://%s/connection/omero-client.json" % host
     r = requests.get(config_url)
     r.raise_for_status()
     cfg = r.json()
@@ -29,14 +29,14 @@ def _configuration_from_url(config_url):
 def _lookup_parameter(initial, paramname, default):
     if initial is not None:
         return initial
-    v = os.getenv('IDR_' + paramname.upper())
+    v = os.getenv("IDR_" + paramname.upper())
     if v is not None:
         return v
     return default
 
 
 def _host_includes_ice_proto(host):
-    return host and re.match(r'(ws|wss|tcp|ssl)://', host)
+    return host and re.match(r"(ws|wss|tcp|ssl)://", host)
 
 
 def connection(host=None, user=None, password=None, port=None, verbose=1):
@@ -65,22 +65,23 @@ def connection(host=None, user=None, password=None, port=None, verbose=1):
 
     :return: A BlitzGateway object
     """
-    host = _lookup_parameter(host, 'host', '')
-    port = int(_lookup_parameter(port, 'port', 0))
-    user = _lookup_parameter(user, 'user', None)
-    password = _lookup_parameter(password, 'password', None)
+    host = _lookup_parameter(host, "host", "")
+    port = int(_lookup_parameter(port, "port", 0))
+    user = _lookup_parameter(user, "user", None)
+    password = _lookup_parameter(password, "password", None)
 
     autocfg = []
-    if ((host and not port) or re.match(r'\w+://', host)) and (
-            not _host_includes_ice_proto(host)):
+    if ((host and not port) or re.match(r"\w+://", host)) and (
+        not _host_includes_ice_proto(host)
+    ):
         autocfg, host = _configuration_from_url(host)
 
     # https://github.com/openmicroscopy/openmicroscopy/blob/v5.4.3/components/tools/OmeroPy/src/omero/clients.py#L50
-    kwargs = {'args': autocfg}
+    kwargs = {"args": autocfg}
     if host:
-        kwargs['host'] = host
+        kwargs["host"] = host
     if port:
-        kwargs['port'] = port
+        kwargs["port"] = port
 
     c = omero.client(**kwargs)
 
@@ -97,24 +98,26 @@ def connection(host=None, user=None, password=None, port=None, verbose=1):
         c.enableKeepAlive(300)
         conn = BlitzGateway(client_obj=c)
     except omero.ClientError as e:
-        if re.match(r'\w+://', host):
+        if re.match(r"\w+://", host):
             raise
-        print('Failed to connect: {}, retrying with websockets'.format(e),
-              file=sys.stderr)
+        print(
+            "Failed to connect: {}, retrying with websockets".format(e), file=sys.stderr
+        )
         return connection(
-            'wss://{}/omero-ws'.format(host), user, password, 443, verbose)
+            "wss://{}/omero-ws".format(host), user, password, 443, verbose
+        )
 
     if verbose > 0:
-        server = ''
+        server = ""
         if verbose > 1:
             info = conn.c.sf.ice_getConnection().getInfo()
-            server = '[{}:{}]'.format(info.remoteAddress, info.remotePort)
+            server = "[{}:{}]".format(info.remoteAddress, info.remotePort)
 
         print("Connected to IDR%s ..." % server)
     return conn
 
 
-def create_http_session(idr_base_url='https://idr.openmicroscopy.org'):
+def create_http_session(idr_base_url="https://idr.openmicroscopy.org"):
 
     """
     Create and return http session
@@ -123,7 +126,7 @@ def create_http_session(idr_base_url='https://idr.openmicroscopy.org'):
 
     # create http session
     with requests.Session() as session:
-        request = requests.Request('GET', index_page)
+        request = requests.Request("GET", index_page)
         prepped = session.prepare_request(request)
         response = session.send(prepped)
         if response.status_code != 200:
