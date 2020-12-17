@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/IDR/idr-py.svg?branch=master
-    :target: https://travis-ci.org/IDR/idr-py
+.. image:: https://travis-ci.org/ome/idr-py.png
+   :target: http://travis-ci.org/ome/idr-py
 
 .. image:: https://badge.fury.io/py/idr-py.svg
     :target: https://badge.fury.io/py/idr-py
