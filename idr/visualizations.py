@@ -98,18 +98,14 @@ def plot_string_interactions(
     primary_list, secondary_list, total_interactions_dataframe, plot_condition=True
 ):
     dict1 = {}
-    new_list = []
-    for g in secondary_list:
-        new_list.append("string:%s" % g)
 
     for gene in primary_list:
-        v = "string:%s" % gene
-        c2 = total_interactions_dataframe.loc[total_interactions_dataframe[2] == v]
-        c3 = total_interactions_dataframe.loc[total_interactions_dataframe[3] == v]
+        c2 = total_interactions_dataframe.loc[total_interactions_dataframe[2] == gene]
+        c3 = total_interactions_dataframe.loc[total_interactions_dataframe[3] == gene]
         c4 = pandas.concat([c2, c3])
         dict1[str(gene)] = {}
         totlist = set(list(c2[3]) + list(c3[2]))
-        intwithsublist = totlist.intersection(new_list)
+        intwithsublist = totlist.intersection(secondary_list)
         if len(intwithsublist) > 0:
             for gene1 in intwithsublist:
                 c5 = c4.loc[c4[2] == gene1]

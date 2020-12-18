@@ -25,7 +25,7 @@ def genes_of_interest_from_string(gene_names, no_of_interacting_partners, taxono
     pandas.set_option("display.max_columns", 500)
     df = read_csv(StringIO(res.text), sep="\t", header=None)
     c1 = df.loc[:, [2, 3, 14]]
-    return c1
+    return c1.replace(to_replace="string:", value="", regex=True)
 
 
 def network_of_interest(gene_names, no_of_interacting_partners):
