@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/ome/idr-py.png
-   :target: http://travis-ci.org/ome/idr-py
+.. image:: https://github.com/IDR/idr-py/workflows/Build/badge.svg
+   :target: https://github.com/IDR/idr-py/actions
 
 .. image:: https://badge.fury.io/py/idr-py.svg
     :target: https://badge.fury.io/py/idr-py
