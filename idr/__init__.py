@@ -1,7 +1,4 @@
-from .connections import (
-    connection,
-    create_http_session
-)
+from .connections import connection, create_http_session
 
 from .attributes import (
     attributes_by_attributes,
@@ -9,13 +6,10 @@ from .attributes import (
     get_phenotypes_for_gene,
     get_phenotypes_for_genelist,
     get_similar_genes,
-    get_organism_screenids
+    get_organism_screenids,
 )
 
-from .images import (
-    images_by_phenotype,
-    simple_colocalisation
-)
+from .images import images_by_phenotype, simple_colocalisation
 
 from .externalDBs import (
     genes_of_interest_from_string,
@@ -23,13 +17,10 @@ from .externalDBs import (
     get_entrezid,
     get_ensembleid,
     genes_of_interest_go,
-    ensembleid_to_genesymbol
+    ensembleid_to_genesymbol,
 )
 
-from .visualizations import (
-    plot_idr_attributes,
-    plot_string_interactions
-)
+from .visualizations import plot_idr_attributes, plot_string_interactions
 
 __all__ = (
     connection,
@@ -49,5 +40,5 @@ __all__ = (
     genes_of_interest_go,
     ensembleid_to_genesymbol,
     plot_idr_attributes,
-    plot_string_interactions
+    plot_string_interactions,
 )
