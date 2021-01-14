@@ -1,3 +1,11 @@
+0.4.1 (2021-01-14)
+------------------
+
+Bug fixes:
+
+- Fix methods and tests [#24](https://github.com/IDR/idr-py/pull/20)
+- Switch from Travis CI to GitHub actions [#24](https://github.com/IDR/idr-py/pull/20)
+
 0.4.0 (2020-03-18)
 ------------------
 

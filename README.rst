@@ -1,4 +1,4 @@
-.. image:: https://github.com/IDR/idr-py/workflows/Build/badge.svg
+.. image:: https://github.com/IDR/idr-py/workflows/Tox/badge.svg
    :target: https://github.com/IDR/idr-py/actions
 
 .. image:: https://badge.fury.io/py/idr-py.svg
@@ -12,8 +12,8 @@ Library with helper methods for accessing the Image Data Resource (IDR).
 Requirements
 ============
 
- * OMERO.py 5.6.x
- * Python 3.6+
+* OMERO.py 5.6.x
+* Python 3.6+
 
 Installing with conda
 =====================
