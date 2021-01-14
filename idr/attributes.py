@@ -2,7 +2,7 @@
 Helper functions for accessing the IDR from within IPython notebooks.
 """
 import pandas
-import omero.clients # NOQA
+import omero.clients  # NOQA
 from omero.rtypes import rlist, rstring, unwrap
 from omero.sys import ParametersI
 from .externalDBs import get_entrezid, get_ensembleid, ensembleid_to_genesymbol
@@ -11,14 +11,15 @@ from .widgets import progress
 import numpy as np
 
 
-def attributes_by_attributes(conn,
-                             name="Gene Symbol",
-                             value="ASH2L",
-                             ns="openmicroscopy.org/mapr/gene",
-                             ns2="openmicroscopy.org/mapr/phenotype",
-                             name2=None,
-                             s_id=None
-                             ):
+def attributes_by_attributes(
+    conn,
+    name="Gene Symbol",
+    value="ASH2L",
+    ns="openmicroscopy.org/mapr/gene",
+    ns2="openmicroscopy.org/mapr/phenotype",
+    name2=None,
+    s_id=None,
+):
 
     """
     Return a list of neighbours attributes
@@ -36,14 +37,15 @@ def attributes_by_attributes(conn,
     if name:
         params.addString("name", name)
         where_claus.append("and mv.name = :name")
-    q = q.format(**{'where_claus': " ".join(where_claus)})
+    q = q.format(**{"where_claus": " ".join(where_claus)})
 
-    values = [v[0]['value'] for v in unwrap(
-        conn.getQueryService().projection(q, params))]
+    values = [
+        v[0]["value"] for v in unwrap(conn.getQueryService().projection(q, params))
+    ]
 
     params = ParametersI()
     valuelist = [rstring(str(v)) for v in values]
-    params.add('values', rlist(valuelist))
+    params.add("values", rlist(valuelist))
     params.addString("ns", ns)
     params.addString("ns2", ns2)
 
@@ -72,32 +74,36 @@ def attributes_by_attributes(conn,
         params.addString("name2", name2)
         where_claus.append("and mv2.name = :name2")
 
-    q = q.format(**{'where_claus': " ".join(where_claus)})
+    q = q.format(**{"where_claus": " ".join(where_claus)})
 
     if s_id is not None:
-        q = q + ("and i in (select image from WellSample "
-                 "where well.plate in "
-                 "(select child from ScreenPlateLink where "
-                 "parent.id = {sId}))")
+        q = q + (
+            "and i in (select image from WellSample "
+            "where well.plate in "
+            "(select child from ScreenPlateLink where "
+            "parent.id = {sId}))"
+        )
 
         screen_id_list = []
         screen_id_list.append(str(s_id))
-        q = q.format(**{'sId': " ".join(screen_id_list)})
+        q = q.format(**{"sId": " ".join(screen_id_list)})
 
     res = {}
     for r in unwrap(conn.getQueryService().projection(q, params)):
         r = r[0]
         try:
-            res[(r['name'], r['value'])].append((r['name2'], r['value2']))
+            res[(r["name"], r["value"])].append((r["name2"], r["value2"]))
         except KeyError:
-            res[(r['name'], r['value'])] = [(r['name2'], r['value2'])]
+            res[(r["name"], r["value"])] = [(r["name2"], r["value2"])]
     return res
 
 
-def annotation_ids_by_field(conn,
-                            value="CMPO_0000077",
-                            key="Phenotype Term Accession",
-                            ns="openmicroscopy.org/mapr/phenotype"):
+def annotation_ids_by_field(
+    conn,
+    value="CMPO_0000077",
+    key="Phenotype Term Accession",
+    ns="openmicroscopy.org/mapr/phenotype",
+):
     """
     Return a list of IDs for map annotations with the given namespace
     that have a key=value pair matching the given parameters.
@@ -107,16 +113,17 @@ def annotation_ids_by_field(conn,
     params.addString("value", value)
     params.addString("key", key)
     params.addString("ns", ns)
-    q = ("select a.id from MapAnnotation a join a.mapValue as mv "
-         "where a.ns = :ns and mv.name = :key and mv.value = :value")
+    q = (
+        "select a.id from MapAnnotation a join a.mapValue as mv "
+        "where a.ns = :ns and mv.name = :key and mv.value = :value"
+    )
 
     return unwrap(conn.getQueryService().projection(q, params))[0]
 
 
-def get_phenotypes_for_gene(session,
-                            gene_name,
-                            screenid=None,
-                            idr_base_url="https://idr.openmicroscopy.org"):
+def get_phenotypes_for_gene(
+    session, gene_name, screenid=None, idr_base_url="https://idr.openmicroscopy.org"
+):
 
     """
     Return a list of phenotype
@@ -133,10 +140,10 @@ def get_phenotypes_for_gene(session,
     if screenid is not None:
         screen_id_list.append(screenid)
     else:
-        qs = {'base': idr_base_url, 'key': 'gene', 'value': gene_name}
+        qs = {"base": idr_base_url, "key": "gene", "value": gene_name}
         url = screens_projects_url.format(**qs)
-        for s in session.get(url).json()['screens']:
-            screen_id_list.append(s['id'])
+        for s in session.get(url).json()["screens"]:
+            screen_id_list.append(s["id"])
 
     unique_list = []
     unique_list_1 = []
@@ -144,40 +151,49 @@ def get_phenotypes_for_gene(session,
 
     if len(screen_id_list) == 0:
         phenotype_ids_dataframe = pandas.DataFrame(
-            {'Name': unique_list,
-             'Accession': unique_list_1,
-             'phenotypeAndScreenId': unique_list_1})
+            {
+                "Name": unique_list,
+                "Accession": unique_list_1,
+                "phenotypeAndScreenId": unique_list_1,
+            }
+        )
         return phenotype_ids_dataframe
 
     for sid in screen_id_list:
         screen_id = sid
-        screenqs = {'base': idr_base_url, 'key': 'gene',
-                    'value': gene_name, 'screen_id': screen_id}
+        screenqs = {
+            "base": idr_base_url,
+            "key": "gene",
+            "value": gene_name,
+            "screen_id": screen_id,
+        }
         screenurl = plates_url.format(**screenqs)
         phenotype_per_screen = []
         phenotype_id_per_screen = []
         screen_ids = []
-        t_name = 'Phenotype Term Name'
-        t_access = 'Phenotype Term Accession'
-        for p in session.get(screenurl).json()['plates']:
-            plate_id = p['id']
-            imageqs = {'base': idr_base_url, 'key': 'gene',
-                       'value': gene_name, 'parent_type': 'plate',
-                       'parent_id': plate_id}
+        t_name = "Phenotype Term Name"
+        t_access = "Phenotype Term Accession"
+        for p in session.get(screenurl).json()["plates"]:
+            plate_id = p["id"]
+            imageqs = {
+                "base": idr_base_url,
+                "key": "gene",
+                "value": gene_name,
+                "parent_type": "plate",
+                "parent_id": plate_id,
+            }
             plateurl = images_url.format(**imageqs)
-            for i in session.get(plateurl).json()['images']:
-                image_id = i['id']
-                qs = {'base': idr_base_url,
-                      'type': 'image',
-                      'image_id': image_id}
+            for i in session.get(plateurl).json()["images"]:
+                image_id = i["id"]
+                qs = {"base": idr_base_url, "type": "image", "image_id": image_id}
                 url = map_url.format(**qs)
-                for a in session.get(url).json()['annotations']:
-                    for v in a['values']:
+                for a in session.get(url).json()["annotations"]:
+                    for v in a["values"]:
                         key = v[0]
                         value = v[1]
                         if key.startswith(t_name) & key.endswith(t_name):
                             phenotype_per_screen.append(value)
-                            screen_ids.append(str(screen_id) + '_' + value)
+                            screen_ids.append(str(screen_id) + "_" + value)
                         if key.startswith(t_access) & key.endswith(t_access):
                             phenotype_id_per_screen.append(value)
 
@@ -186,18 +202,23 @@ def get_phenotypes_for_gene(session,
         unique_list_2 = unique_list_2 + list(set(screen_ids))
 
         phenotype_ids_dataframe = pandas.DataFrame(
-            {'Name': unique_list,
-             'Accession': unique_list_1,
-             'phenotypeAndScreenId': unique_list_2})
+            {
+                "Name": unique_list,
+                "Accession": unique_list_1,
+                "phenotypeAndScreenId": unique_list_2,
+            }
+        )
 
     return phenotype_ids_dataframe
 
 
-def get_phenotypes_for_genelist(session,
-                                go_gene_list,
-                                organism,
-                                idr_base_url="https://idr.openmicroscopy.org",
-                                lookup_entrez=True):
+def get_phenotypes_for_genelist(
+    session,
+    go_gene_list,
+    organism,
+    idr_base_url="https://idr.openmicroscopy.org",
+    lookup_entrez=True,
+):
 
     """
     Return a list of phenotypes (dataframe)
@@ -219,7 +240,7 @@ def get_phenotypes_for_genelist(session,
         if lookup_entrez:
             entrezid = get_entrezid(gene)
         else:
-            entrezid = '-'
+            entrezid = "-"
         ensembleid = get_ensembleid(gene)
 
         gid = None
@@ -228,17 +249,15 @@ def get_phenotypes_for_genelist(session,
         if len(uniquelist) == 0:
             key = "GeneName"
             gid = gene
-            uniquelist = get_phenotypes_for_gene(session,
-                                                 gid)
+            uniquelist = get_phenotypes_for_gene(session, gid)
 
         # search with ensembleid if geneSymbol does not
         # return any result
-        if len(uniquelist['Name']) == 0:
+        if len(uniquelist["Name"]) == 0:
             key = "EnsemblID"
             for gid in ensembleid:
-                uniquelist = get_phenotypes_for_gene(session,
-                                                     gid)
-                if len(uniquelist['Name']) != 0:
+                uniquelist = get_phenotypes_for_gene(session, gid)
+                if len(uniquelist["Name"]) != 0:
                     break
 
         # search with entrezid if gene symbol and
@@ -247,9 +266,8 @@ def get_phenotypes_for_genelist(session,
             if len(uniquelist) == 0:
                 key = "EntrezID"
                 for gid in entrezid:
-                    uniquelist = get_phenotypes_for_gene(session,
-                                                         gid)
-                    if len(uniquelist['Name']) != 0:
+                    uniquelist = get_phenotypes_for_gene(session, gid)
+                    if len(uniquelist["Name"]) != 0:
                         break
 
         # List of genes from string which were part of IDR
@@ -260,15 +278,15 @@ def get_phenotypes_for_genelist(session,
         # and had a phenotype associated with them
         if len(uniquelist) != 0:
 
-            accname = uniquelist['Name']
-            accid = uniquelist['Accession']
-            scrid = uniquelist['phenotypeAndScreenId']
+            accname = uniquelist["Name"]
+            accid = uniquelist["Accession"]
+            scrid = uniquelist["phenotypeAndScreenId"]
 
             accnames = list(accname.values)
             accids = list(accid.values)
             idlist = []
             for id in scrid:
-                idx = id.index('_')
+                idx = id.index("_")
                 idlist.append(id[:idx])
 
             for idx, idx1 in enumerate(accnames):
@@ -278,37 +296,41 @@ def get_phenotypes_for_genelist(session,
             totalphenotypeaccession = totalphenotypeaccession + accids
             totalscreenids = totalscreenids + list(scrid.values)
 
-            genedict[gene] = [entrezid, ensembleid,
-                              None, None, None, None, None]
+            genedict[gene] = [entrezid, ensembleid, None, None, None, None, None]
             genedict[gene][2] = key
             genedict[gene][3] = gid
             genedict[gene][4] = accnames
             genedict[gene][5] = accids
             genedict[gene][6] = idlist
 
-        progress(ids+1, len(go_gene_list),
-                 status='Iterating through gene list')
+        progress(ids + 1, len(go_gene_list), status="Iterating through gene list")
 
-    query_genes_dataframe = pandas.DataFrame.from_dict(genedict,
-                                                       orient='index')
-    query_genes_dataframe.columns = ("Entrez", "Ensembl",
-                                     "Key", "Value", "PhenotypeName",
-                                     "PhenotypeAccession", "ScreenIds")
+    query_genes_dataframe = pandas.DataFrame.from_dict(genedict, orient="index")
+    query_genes_dataframe.columns = (
+        "Entrez",
+        "Ensembl",
+        "Key",
+        "Value",
+        "PhenotypeName",
+        "PhenotypeAccession",
+        "ScreenIds",
+    )
 
     # get the screens to phenotypes map for the query genes
     organism_screen_idlist = get_organism_screenids(session, organism)
-    genes_scid_list = [item for sublist in
-                       query_genes_dataframe['ScreenIds'].values
-                       for item in sublist]
+    genes_scid_list = [
+        item
+        for sublist in query_genes_dataframe["ScreenIds"].values
+        for item in sublist
+    ]
     genes_scid_list = list(set(genes_scid_list))
     screen_to_phenotype_dictionary = {}
     for scid in genes_scid_list:
         if scid in organism_screen_idlist:
-            content = [x for x in set(list(totalscreenids))
-                       if x.startswith(scid)]
+            content = [x for x in set(list(totalscreenids)) if x.startswith(scid)]
             for idx, item in enumerate(content):
-                idx1 = item.index('_')
-                content[idx] = item[idx1+1:]
+                idx1 = item.index("_")
+                content[idx] = item[idx1 + 1 :]
             screen_to_phenotype_dictionary[scid] = content
 
     return [query_genes_dataframe, screen_to_phenotype_dictionary]
@@ -338,7 +360,7 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
                 "value": phenotype,
                 "ns": "openmicroscopy.org/mapr/phenotype",
                 "ns2": "openmicroscopy.org/mapr/gene",
-                "s_id": sid
+                "s_id": sid,
             }
 
             cc = attributes_by_attributes(conn, **args)
@@ -366,7 +388,7 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
             removed_genes = []
             for g in ov_genes:
                 converted = g
-                if g.startswith('ENSG'):
+                if g.startswith("ENSG"):
                     converted = ensembleid_to_genesymbol(g)
                     removed_genes.append(g)
                 remove_duplicates.append(converted)
@@ -378,13 +400,14 @@ def get_similar_genes(conn, query_genes_list, screen_to_phenotype_dictionary):
                 similar_genes[str(sid)][phenotype] = list(setdiff_genes)
                 overlap_genes[str(sid)][phenotype] = list(ov_genes)
 
-        progress(i+1, len(set(scid_list)), status='Iterating through screens')
+        progress(i + 1, len(set(scid_list)), status="Iterating through screens")
 
     return [similar_genes, overlap_genes]
 
 
-def get_organism_screenids(session, organism,
-                           idr_base_url="https://idr.openmicroscopy.org"):
+def get_organism_screenids(
+    session, organism, idr_base_url="https://idr.openmicroscopy.org"
+):
 
     """
     Return a list of screen ids in IDR
@@ -392,12 +415,12 @@ def get_organism_screenids(session, organism,
     """
 
     screen_id_list = []
-    qs = {'base': idr_base_url, 'key': 'organism', 'value': organism}
+    qs = {"base": idr_base_url, "key": "organism", "value": organism}
     screens_projects_url = "{base}/mapr/api/{key}/?value={value}"
     url = screens_projects_url.format(**qs)
     sr = session.get(url)
     sr.raise_for_status()
-    for s in sr.json()['screens']:
-        screen_id_list.append(str(s['id']))
+    for s in sr.json()["screens"]:
+        screen_id_list.append(str(s["id"]))
 
     return screen_id_list
